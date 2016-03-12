@@ -16,6 +16,17 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
+    url(r'^captcha/', include('captcha.urls')),
+    url(r'^chaining/', include('smart_selects.urls')),
+    url(r'^jobportal/', include('jobportal.urls')),
+    url(r'^mentormentee/', include('mentormentee.urls', namespace="mentormentee", app_name="mentormentee")),
     url(r'^admin/', include(admin.site.urls)),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,0 +1,61 @@
+{% extends 'base_jobportal.html' %}
+
+{% block account_setting%}
+    <p><a href="{% url 'companylogout' %}" title="alum_logout">Logout</a></p>
+    <p><a href="#" title="">My Account</a></p>
+{% endblock%}
+
+{% block menu %}
+    <li class="account-nav-head">Recruiter <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
+    <li><a href="{% url 'companyhome' %}" title="Company Home">Home</a></li>
+    <li><a href="{% url 'companyprofile' %}" title="Profile">Company Profile</a></li>
+    <li><a href="{% url 'companyaddjob' %}" title="View Jobs">Post New Jobs</a></li>
+    <li><a href="{% url 'companyviewjobs' %}" title="View Jobs">View Jobs</a></li>
+    <li><a href="{% url 'companyrequestevent' %}" title="Request Event">Request Events</a></li>
+    <li><a href="{% url 'companyeventsandstatus' %}" title="Events and Status">Events and Status</a></li>
+    <li><a href="{% url 'password_change_company' %}" title="Change Password">Change Password</a></li>
+{% endblock %}
+
+{% block content %}
+        <h2 class="sub-header">Company Account information</h2>
+        <hr/>
+        <div class="col-md-12">
+               {% if company_instance.approved == True %}
+                   <div class="bs-callout bs-callout-success">
+                        <h4>Account status:</h4>
+                        <p style="color:green">Approved</p>
+                   </div>
+               {% elif company_instance.sent_back == True %}
+                    <div class="bs-callout bs-callout-warning">
+                        <h4>Account status:</h4>
+                        <p style="color:yellow">Some information is incorrect/incomplete.</p>
+                    </div>
+               {% else %}
+                    <div class="bs-callout bs-callout-danger">
+                        <h4>Account status:</h4>
+                        <p style="color: red">Account has not been approved yet.</p>
+                    </div>
+               {% endif %}
+
+            <h3>Company Profile Information</h3>
+            <p> Company Name: {{ company_instance.company_name }}</p>
+            <p>Description: {{ company_instance.description }}</p>
+            <p>Postal Address: {{ company_instance.postal_address }}</p>
+            <p>Website: {{ company_instance.website }}</p>
+            <p>Organization Type: {{ company_instance.organization_type }}</p>
+            <p>Industry Sector: {{ company_instance.industry_sector }}</p>
+            <h3>HR Details</h3>
+            <p>Head HR Name: {{ company_instance.head_hr_name }}</p>
+            <p>Head HR Email: {{ company_instance.head_hr_email }}</p>
+            <p>Head HR Designation: {{ company_instance.head_hr_Designation }}</p>
+            <p>Head HR Mobile: {{ company_instance.head_hr_mobile }}</p>
+            <p>Head HR Fax: {{ company_instance.head_hr_fax }}</p>
+            <p>First HR Name: {{ company_instance.first_hr_name }}</p>
+            <p>First HR Designation: {{ company_instance.first_hr_designation }}</p>
+            <p>First HR Mobile: {{ company_instance.first_hr_mobile }}</p>
+            <p>First HR Email: {{ company_instance.first_hr_email }}</p>
+            <p>First HR Fax: {{ company_instance.first_hr_fax}}</p>
+            <h3>Edit Profile</h3>
+            <h4><a class="btn btn-info" href="{% url 'editcompanyprofile' company_instance.id %}">Edit Profile</a></h4>
+        </div>
+{% endblock %}

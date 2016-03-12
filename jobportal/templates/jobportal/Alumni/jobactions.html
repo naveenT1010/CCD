@@ -1,0 +1,63 @@
+{% extends 'base_jobportal.html' %}
+
+{% block menu %}
+<li class="account-nav-head">Alumni <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
+<li><a href="{% url 'alum_home' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+<li><a href="{% url 'availablejobs' %}"><span class="glyphicon glyphicon-briefcase"></span> Jobs/Internship</a></li>
+<li><a href="{% url 'alum_jobsappliedfor' %}" title=""><span class="glyphicon glyphicon-ok"></span> Jobs applied for</a>
+</li>
+<li><a href="{% url 'postalumjob' %}" title="Post a new job"><span class="glyphicon glyphicon-plus"></span> Post a new Job</a></li>
+<li><a href="{% url 'viewalumjob' %}" title="View posted jobs">View posted jobs</a></li>
+<li><a href="{% url 'mentormentee:add_proposal' %}" title="Add a new proposal"><span class="glyphicon glyphicon-plus"></span> Add new research proposal</a></li>
+<li><a href="{% url 'mentormentee:alum_proposals' %}" title="View all proposals">View proposals</a></li>
+<li><a href="{% url 'alum_logout' %}" title="alum_logout">Logout</a></li>
+{% endblock %}
+
+{% block content %}
+    <p>Job Designation : {{ job_instance.designation }}</p>
+    <p></p>
+    <!--Student Candidate-->
+    {% if stud_instance %}
+        <p>Stud name: {{ stud_instance.first_name }}</p>
+        <p>CPI : {{ stud_instance.cpi }}</p>
+        {% if relation_instance.shortlist_status == False %}
+            <p>Shortlisted : {{ relation_instance.shortlist_status | yesno:"Yes,No" }}</p>
+            <p>Add to Shortlist: <a href="{% url 'alum_shortlist' relation_instance.id %}">Add</a></p>
+        {% else %}
+            <p><span style="color: green">This student is already shortlisted.</span></p>
+            <p>Remove from Shortlist: <a href="{% url 'alum_unshortlist' relation_instance.id %}">Remove</a></p>
+            {% if relation_instance.placed_init == False %}
+                <p>Placed : {{ relation_instance.placed_init | yesno:"Yes,No" }}</p>
+                <p>Place : <a href="{% url 'alum_place' relation_instance.id %}">Place</a></p>
+            {% else %}
+                <p>Already Placed</p>
+                <p>Approved: {{ relation_instance.placed_approved  | yesno:"Yes,No" }}</p>
+                <p>Undo placed: <a href="{% url 'alum_unplace' relation_instance.id %}"></a></p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <!--Alumni Candidate-->
+    {% if alum_instance %}
+        <p>Stud name: {{ alum_instance }}</p>
+        <p>Department : {{ alum_instance.department }}</p>
+        <p>Programme : {{ alum_instance.programme }}</p>
+        {% if relation_instance.shortlist_status == False %}
+            <p>Shortlisted : {{ relation_instance.shortlist_status | yesno:"Yes,No" }}</p>
+            <p>Add to Shortlist: <a href="{% url 'alum_shortlist2' relation_instance.id %}">Add</a></p>
+        {% else %}
+            <p><span style="color: green">This student is already shortlisted.</span></p>
+            <p>Remove from Shortlist: <a href="{% url 'alum_unshortlist2' relation_instance.id %}">Remove</a></p>
+            {% if relation_instance.placed_init == False %}
+                <p>Placed : {{ relation_instance.placed_init | yesno:"Yes,No" }}</p>
+                <p>Place : <a href="{% url 'alum_place2' relation_instance.id %}">Place</a></p>
+            {% else %}
+                <p>Already Placed</p>
+                <p>Approved: {{ relation_instance.placed_approved  | yesno:"Yes,No" }}</p>
+                <p>Undo placed: <a href="{% url 'alum_unplace2' relation_instance.id %}"></a></p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <!--Links-->
+	<p><a href="{% url 'alum_home' %}" title="">Home</a></p>
+	<p><a href="{% url 'alum_logout' %}" title="Logout">Logout</a></p>
+{% endblock %}

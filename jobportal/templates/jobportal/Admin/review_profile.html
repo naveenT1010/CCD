@@ -1,0 +1,228 @@
+{% extends 'base_jobportal.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block account_setting%}
+    <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
+    <p><a href="#" title="">My Account</a></p>
+{% endblock%}
+
+{% block menu %}
+<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
+    <li><a href="{% url 'admin_home' %}">Home</a></li>
+    <li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
+    <li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
+    <li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
+        <li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
+    <li><a href="{% url 'departments' %}">Departments</a></li>
+    <li><a href="{% url 'programmes' %}">Programmes</a></li>
+    <li><a href="{% url 'years' %}">Years</a></li>
+    <li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
+{% endblock %}
+
+{% block content %}
+
+        {% if edited == 'Student' %}
+            <div class="col-md-9">
+                <h3>Review Student Information</h3>
+
+                <p>Web-mail : {{ student_instance.iitg_webmail }}</p>
+
+                <p>Roll No: {{ student_instance.roll_no }}</p>
+
+                <p>
+                    Name: {{ student_instance.first_name }} {{ student_instance.middle_name }} {{ student_instance.last_name }}</p>
+
+                <p>Dob: {{ student_instance.dob }}</p>
+
+                <p>Sex: {{ student_instance.sex }}</p>
+
+                <p>Category: {{ student_instance.category }}</p>
+
+                <p>Nationality: {{ student_instance.nationality }}</p>
+
+                <p>Minor Programme: {{ student_instance.minor_programme }}</p>
+
+                <p>JEE Rank(AIR) : {{ student_instance.jee_air_rank }}</p>
+
+                <p>Hostel: {{ student_instance.hostel }}</p>
+
+                <p>Room No: {{ student_instance.room_no }}</p>
+
+                <p>Alternate Email: {{ student_instance.alternative_email }}</p>
+
+                <p>Programme : {{ student_instance.prog }}</p>
+
+                <p>Dept: {{ student_instance.dept }}</p>
+
+                <p>Year: {{ student_instance.year }}</p>
+
+                <p>Mobile No (Campus) : {{ student_instance.mobile_campus }}</p>
+
+                <p>Mobile IITG(Alternative) : {{ student_instance.mobile_campus_alternative }}</p>
+
+                <p>Mobile No (Home) : {{ student_instance.mobile_home }}</p>
+                <h4>Permanent Address</h4>
+
+                <p>Address Line1: {{ student_instance.address_line1 }}</p>
+
+                <p>Address Line2: {{ student_instance.address_line2 }}</p>
+
+                <p>Address Line3: {{ student_instance.address_line3 }}</p>
+
+                <p>PinCode: {{ student_instance.pin_code }}</p>
+                <h5>Acacdemic Results</h5>
+
+                <p>Percentage X : {{ student_instance.percentage_x }}</p>
+
+                <p>Percentage XII : {{ student_instance.percentage_xii }}</p>
+
+                <p>Board X: {{ student_instance.board_x }}</p>
+
+                <p>Board XII: {{ student_instance.board_xii }}</p>
+
+                <p>Medium X: {{ student_instance.medium_x }}</p>
+
+                <p>Medium XII: {{ student_instance.medium_xii }}</p>
+
+                <p>Passing Year X : {{ student_instance.passing_year_x }}</p>
+
+                <p>Passing Year XII : {{ student_instance.passing_year_xii }}</p>
+
+                <p>Gap in study: {{ student_instacne.gap_in_study }}</p>
+
+                <p>Gap Reason: {{ student_instance.gap_reason }}</p>
+                <h4>Placement Status</h4>
+
+                <p>LinkedIn: {{ student_instance.linkedin_link }}</p>
+
+                <p>Placed: {{ student_instance.placed }}</p>
+
+                <p>Intern2: {{ student_instance.intern2 }}</p>
+
+                <p>Intern3: {{ student_instance.intern3 }}</p>
+
+                <p>Company Count: {{ student_instance.company_count }}</p>
+
+                <p>PPO: {{ student_instance.ppo }}</p>
+
+                <p>CPI : {{ student_instance.cpi }}</p>
+            </div>
+            <div class="col-md-9">
+                <p><a href="{% url 'edit_student' student_instance.id %}"> Edit Student Profile</a></p>
+            </div>
+        {% elif edited == 'Company' %}
+            <h2 class="sub-header">Company Details</h2>
+            <hr>
+            <div class="col-md-9">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#profile" aria-controls="home" role="tab" data-toggle="tab">Company Profile</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#hrdetails" aria-controls="profile" role="tab" data-toggle="tab">HR Details</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#status" aria-controls="messages" role="tab" data-toggle="tab">Status</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="profile">
+                            <p> Company Name: {{ company_instance.company_name }}</p>
+                            <p>Description: {{ company_instance.description }}</p>
+                            <p>Postal Address: {{ company_instance.postal_address }}</p>
+                            <p>Website: {{ company_instance.website }}</p>
+                            <p>Organization Type: {{ company_instance.organization_type }}</p>
+                            <p>Industry Sector: {{ company_instance.industry_sector }}</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="hrdetails">
+                            <p>Head HR Name: {{ company_instance.head_hr_name }}</p>
+                            <p>Head HR Email: {{ company_instance.head_hr_email }}</p>
+                            <p>Head HR Designation: {{ company_instance.head_hr_Designation }}</p>
+                            <p>Head HR Mobile: {{ company_instance.head_hr_mobile }}</p>
+                            <p>Head HR Fax: {{ company_instance.head_hr_fax }}</p>
+                            <p>First HR Name: {{ company_instance.first_hr_name }}</p>
+                            <p>First HR Designation: {{ company_instance.first_hr_designation }}</p>
+                            <p>First HR Mobile: {{ company_instance.first_hr_mobile }}</p>
+                            <p>First HR Email: {{ company_instance.first_hr_email }}</p>
+                            <p>First HR Fax: {{ company_instance.first_hr_fax }}</p>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="status">
+
+                            <dl class="dl">
+                                <dt>Approved</dt>
+                                <dd>{{ company_instance.approved | yesno | capfirst}}</dd>
+                                <dt>Sent Back</dt>
+                                <dd>{{ company_instance.sent_back | yesno |capfirst}}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <p><a class="btn btn-info" href="{% url 'edit_company' company_instance.id %}"> Edit Company Profile</a></p>
+            </div>
+        {% elif edited == 'Request' %}
+            <div class="col-md-9">
+
+                <h2>Recruiter Account Request</h2>
+
+                <p><strong>Company Name: </strong>
+                    <mark>{{ request.company_name_reg }}</mark>
+                </p>
+                <p><strong>Description: </strong>
+                    <mark>{{ request.description_reg }}</mark>
+                </p>
+                <p><strong>Postal Address: </strong>
+                    <mark>{{ request.postal_address_reg }}</mark>
+                </p>
+                <p><strong>Website: </strong>
+                    <mark>{{ request.website_reg }}</mark>
+                </p>
+                <p><strong>Organization Type:</strong>
+                    <mark> {{ request.organization_type_reg }}</mark>
+                </p>
+                <p><strong>Industry Sector: </strong>
+                    <mark>{{ request.industry_sector_reg }}</mark>
+                </p>
+                <h3>HR Details</h3>
+
+                <p>Head HR Name: {{ request.head_hr_name_reg }}</p>
+
+                <p>Head HR Email: {{ request.head_hr_email_reg }}</p>
+
+                <p>Head HR Designation: {{ request.head_hr_Designation_reg }}</p>
+
+                <p>Head HR Mobile: {{ request.head_hr_mobile_reg }}</p>
+
+                <p>Head HR Fax: {{ request.head_hr_fax_reg }}</p>
+
+                <p>First HR Name: {{ request.first_hr_name_reg }}</p>
+
+                <p>First HR Designation: {{ request.first_hr_designation_reg }}</p>
+
+                <p>First HR Mobile: {{ request.first_hr_mobile_reg }}</p>
+
+                <p>First HR Email: {{ request.first_hr_email_reg }}</p>
+
+                <p>First HR Fax: {{ request.first_hr_fax_reg }}</p>
+
+                <p>Second HR Name: {{ request.second_hr_name_reg }}</p>
+
+                <p>Second HR Designation: {{ request.second_hr_designation_reg }}</p>
+
+                <p>Second HR Email: {{ request.second_hr_email_reg }}</p>
+
+                <p>Second HR Mobile: {{ request.second_hr_mobile_reg }}</p>
+
+                <p>Second HR Fax: {{ request.second_hr_fax_reg }}</p>
+
+                <div class="col-md-9">
+                    <h4><a href="{% url 'add_company_by_signup_request' request.id %}"> Add Login Credentials</a></h4>
+                    <h4><a href="{% url 'del_signup_request' request.id %}"> Delete Request</a></h4>
+                </div>
+            </div>
+        {% endif %}
+
+{% endblock %}

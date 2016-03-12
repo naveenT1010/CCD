@@ -1,0 +1,60 @@
+{% extends 'base_jobportal.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Unapproved: Jobs
+{% endblock %}
+
+{% block account_setting%}
+<p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
+<p><a href="#" title="">My Account</a></p>
+{% endblock%}
+
+{% block menu %}
+<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
+<li><a href="{% url 'admin_home' %}">Home</a></li>
+<li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
+<li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
+<li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
+<li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
+<li><a href="{% url 'departments' %}">Departments</a></li>
+<li><a href="{% url 'programmes' %}">Programmes</a></li>
+<li><a href="{% url 'years' %}">Years</a></li>
+<li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="sub-header">Unapproved Job</h2>
+<hr>
+<div class="col-md-9">
+    {% if job_list.count > 0 %}
+    <h3>Jobs</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Job Designation</th>
+            <th>Owner</th>
+            <th>Review and Approve</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for job in job_list %}
+        <tr>
+            <td>{{ job.designation }}</td>
+            <td>
+                {% if job.alum_owner %}
+                {{ job.alum_owner }}
+                {% else %}
+                {{ job.company_owner }}
+                {% endif %}
+            </td>
+            <td><a href="{% url 'review_job' job.id %}">Review and Approve</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <h4>All clear. No approval pending.</h4>
+    {% endif %}
+</div>
+{% endblock %}

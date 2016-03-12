@@ -1,0 +1,61 @@
+{% extends 'base_jobportal.html' %}
+
+{% block account_setting%}
+<p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
+<p><a href="#" title="">My Account</a></p>
+{% endblock%}
+
+{% block menu %}
+<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
+<li><a href="{% url 'admin_home' %}">Home</a></li>
+<li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
+<li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
+<li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
+<li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
+<li><a href="{% url 'departments' %}">Departments</a></li>
+<li><a href="{% url 'programmes' %}">Programmes</a></li>
+<li><a href="{% url 'years' %}">Years</a></li>
+<li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="sub-header">Recruiters</h2>
+<div class="col-md-12">
+    {% if messages %}
+    {% for message in messages%}
+    <div class="alert alert-success" role="alert"><p>{{ message }}</p></div>
+    {% endfor %}
+    {% endif %}
+    <div class="col-md-4 input-group pull-right form-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+        <input type="text" class="filter form-control" placeholder="What you looking for?">
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Company Name</th>
+            <th>Company Profile</th>
+            <th>Profile Approved</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody class="searchable">
+        {% for company in companies %}
+        <tr>
+            <td>{{ company.company_name }}</td>
+            <td><a href="{% url 'review_company_profile' company.id %}">Company Profile</a></td>
+            <td>{{ company.approved | yesno:"Yes,No"}}</td>
+            <td><a href="{% url 'delete_company' company.id %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="col-md-9">
+    <h4><a class="btn btn-info" href="{% url 'companies_csv' %}">Print CSV</a></h4>
+</div>
+<div class="col-md-9">
+    <h4><a class="btn btn-info" href="{% url 'add_company' %}">Add a new company</a></h4>
+</div>
+
+{% endblock %}
