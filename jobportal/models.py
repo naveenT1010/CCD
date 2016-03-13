@@ -40,7 +40,7 @@ class Department(models.Model):
 class Programme(models.Model):
     year = models.ForeignKey(Year)
     dept = ChainedForeignKey(Department, chained_field="year", chained_model_field="year", show_all=False)
-    name = models.CharField(max_length=10, blank=True)
+    name = models.CharField(choices=PROGRAMMES, max_length=10)
 
     def __unicode__(self):
         return str(self.name)
@@ -70,22 +70,18 @@ class Company(models.Model):
                                          verbose_name="Type of Organization", default="PSU")
     industry_sector = models.CharField(max_length=25, choices=INDUSTRY_SECTOR, blank=True,
                                        verbose_name="Industry Sector", default="IT")
-    # HR Contact
-    head_hr_name = models.CharField(max_length=20, null=True, blank=True)
-    head_hr_email = models.CharField(max_length=60, null=True, blank=True)
-    head_hr_designation = models.CharField(max_length=30, null=True, blank=True)
-    head_hr_mobile = models.CharField(max_length=12, null=True, blank=True)
-    head_hr_fax = models.CharField(max_length=15, null=True, blank=True)
-    first_hr_name = models.CharField(max_length=20, null=True, blank=True)
-    first_hr_email = models.CharField(max_length=60, null=True, blank=True)
-    first_hr_designation = models.CharField(max_length=30, null=True, blank=True)
-    first_hr_mobile = models.CharField(max_length=12, null=True, blank=True)
-    first_hr_fax = models.CharField(max_length=15, null=True, blank=True)
-    second_hr_name = models.CharField(max_length=20, null=True, blank=True)
-    second_hr_email = models.CharField(max_length=60, null=True, blank=True)
-    second_hr_designation = models.CharField(max_length=30, null=True, blank=True)
-    second_hr_mobile = models.CharField(max_length=12, null=True, blank=True)
-    second_hr_fax = models.CharField(max_length=15, null=True, blank=True)
+    # Head Contact
+    head_hr_name = models.CharField(max_length=20, default='Mr. Head HR', blank=True)
+    head_hr_email = models.CharField(max_length=60, default='headhr@xyz.com', blank=True)
+    head_hr_designation = models.CharField(max_length=30, default='Head HR', blank=True)
+    head_hr_mobile = models.CharField(max_length=12, default='0123456789', blank=True)
+    head_hr_fax = models.CharField(max_length=15, default='0123456', blank=True)
+    # First HR
+    first_hr_name = models.CharField(max_length=20, default='Mr. First HR', blank=True)
+    first_hr_email = models.CharField(max_length=60, default='firsthr@xyz.com', blank=True)
+    first_hr_designation = models.CharField(max_length=30, default='First HR', blank=True)
+    first_hr_mobile = models.CharField(max_length=12, default='0123456789', blank=True)
+    first_hr_fax = models.CharField(max_length=15, default='0123456', blank=True)
     # status
     approved = models.BooleanField(default=False)
     sent_back = models.BooleanField(default=False)
@@ -139,12 +135,12 @@ class Student(models.Model):
     dob = models.DateField(default=timezone.now, blank=True)
     sex = models.CharField(max_length=1, choices=SEX, default='M')
     category = models.CharField(max_length=10, choices=CATEGORY, default='GEN')
-    nationality = models.CharField(max_length=15, default="INDIA", blank=True)
+    nationality = models.CharField(max_length=15, default="INDIAN", blank=True)
     minor_programme = models.ForeignKey(Department, null=True, related_name="minor", blank=True)
     jee_air_rank = models.DecimalField(max_digits=6, decimal_places=0, default=0)
-    prog = models.ForeignKey(Programme, null=True, related_name="major")
-    dept = models.ForeignKey(Department, null=True)
     year = models.ForeignKey(Year, null=True)
+    dept = ChainedForeignKey(Department, chained_field='year', chained_model_field='year', show_all=False)
+    prog = ChainedForeignKey(Programme, chained_field='dept', chained_model_field='dept', show_all=False)
     # campus information
     hostel = models.CharField(max_length=25, choices=HOSTELS, blank=True, default="")
     room_no = models.CharField(max_length=6, blank=True, default="")
@@ -177,7 +173,7 @@ class Student(models.Model):
     placed = models.BooleanField(default=False, blank=True)
     intern2 = models.BooleanField(default=False, blank=True)
     intern3 = models.BooleanField(default=False, blank=True)
-    company_count = models.DecimalField(max_digits=30, decimal_places=0, default=0, blank=True)
+    company_count = models.DecimalField(max_digits=30, decimal_places=0, default=0, blank=True, null=True)
     ppo = models.BooleanField(default=False, verbose_name="PPO", blank=True)
     # grades
     cpi = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, default=0.00)
@@ -340,27 +336,18 @@ class CompanyReg(models.Model):
                                              verbose_name="Type of Organization", default="PSU")
     industry_sector_reg = models.CharField(max_length=25, choices=INDUSTRY_SECTOR, blank=True,
                                            verbose_name="Industry Sector", default="IT")
-    # HR Contact
-    head_hr_name_reg = models.CharField(max_length=20, null=True, blank=True)
-    head_hr_email_reg = models.CharField(max_length=60, null=True, blank=True)
-    head_hr_designation_reg = models.CharField(max_length=30, null=True, blank=True)
-    head_hr_mobile_reg = models.CharField(max_length=12, null=True, blank=True)
-    head_hr_fax_reg = models.CharField(max_length=15, null=True, blank=True)
-
-    first_hr_name_reg = models.CharField(max_length=20, null=True, blank=True)
-    first_hr_email_reg = models.CharField(max_length=60, null=True, blank=True)
-    first_hr_designation_reg = models.CharField(max_length=30, null=True, blank=True)
-    first_hr_mobile_reg = models.CharField(max_length=12, null=True, blank=True)
-    first_hr_fax_reg = models.CharField(max_length=15, null=True, blank=True)
-
-    second_hr_name_reg = models.CharField(max_length=20, null=True, blank=True)
-    second_hr_email_reg = models.CharField(max_length=60, null=True, blank=True)
-    second_hr_designation_reg = models.CharField(max_length=30, null=True, blank=True)
-    second_hr_mobile_reg = models.CharField(max_length=12, null=True, blank=True)
-    second_hr_fax_reg = models.CharField(max_length=15, null=True, blank=True)
-
-    class Meta:
-        verbose_name_plural = "CompaniesReg"
+    # Head Contact
+    head_hr_name_reg = models.CharField(max_length=20, default='Mr. Head HR', blank=True)
+    head_hr_email_reg = models.CharField(max_length=60, default='headhr@xyz.com', blank=True)
+    head_hr_designation_reg = models.CharField(max_length=30, default='Head HR', blank=True)
+    head_hr_mobile_reg = models.CharField(max_length=12, default='0123456789', blank=True)
+    head_hr_fax_reg = models.CharField(max_length=15, default='0123456', blank=True)
+    # First HR
+    first_hr_name_reg = models.CharField(max_length=20, default='Mr. First HR', blank=True)
+    first_hr_email_reg = models.CharField(max_length=60, default='firsthr@xyz.com', blank=True)
+    first_hr_designation_reg = models.CharField(max_length=30, default='First HR', blank=True)
+    first_hr_mobile_reg = models.CharField(max_length=12, default='0123456789', blank=True)
+    first_hr_fax_reg = models.CharField(max_length=15, default='0123456', blank=True)
 
     def __unicode__(self):
         return str(self.company_name_reg)

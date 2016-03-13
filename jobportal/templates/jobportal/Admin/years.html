@@ -32,7 +32,6 @@
         <thead>
         <tr>
             <th><strong>Current Year</strong></th>
-            <th><strong>Programme</strong></th>
             <th><strong>Edit</strong></th>
             <th><strong>Delete</strong></th>
         </tr>
@@ -41,7 +40,6 @@
         {% for year in years %}
         <tr>
             <td>{{ year.current_year }}</td>
-            <td>{{ year.programme }}</td>
             <td><a href="{% url 'edit_year' year.id %}">Edit</a></td>
             <td><a href="{% url 'delete_year' year.id %}">Delete</a></td>
         </tr>

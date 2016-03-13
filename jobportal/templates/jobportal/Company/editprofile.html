@@ -18,8 +18,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
         <h2 class="sub-header">Edit Profile</h2>
+        <hr>
         <div class="col-md-6">
             <form action="{% url 'editcompanyprofile' company_instance_id %}" method="post" accept-charset="utf-8">
                 {% csrf_token %}
@@ -29,5 +29,4 @@
                 </div>
             </form>
         </div>
-    </div>
 {% endblock %}

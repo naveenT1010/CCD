@@ -79,7 +79,7 @@ def stud_login(request):
                 if user_profile.login_type == "Current Student":
                     # login User
                     auth.login(request, user)
-                    student_instance = Student.objects.get(iitg_webmail=username)
+                    student_instance = Student.objects.get(user=user_profile)
                     request.session['student_instance_id'] = student_instance.id
                     request.session['user_type'] = 'Student'
                     return redirect('stud_home')
@@ -129,99 +129,19 @@ def stud_home(request):
 
 @login_required(login_url=STUD_LOGIN_URL)
 def edit_stud_profile(request):
-    try:
-        student_instance = Student.objects.get(id=request.session['student_instance_id'])
-    except:
-        raise Http404("Error 404")
+    student_instance = Student.objects.get(id=request.session['student_instance_id'])
+    edit_stud_form_data = EditStudProfileForm(request.POST or None, instance=student_instance)
+    # print(edit_stud_form_data)
     if request.method == "POST":
-        edit_stud_form_data = EditStudProfileForm(request.POST)
         if edit_stud_form_data.is_valid():
-            student_instance.dob = edit_stud_form_data.cleaned_data['dob']
-            student_instance.sex = edit_stud_form_data.cleaned_data['sex']
-            student_instance.category = edit_stud_form_data.cleaned_data['category']
-            student_instance.nationality = edit_stud_form_data.cleaned_data['nationality']
-            student_instance.minor_programme = edit_stud_form_data.cleaned_data['minor_programme']
-            student_instance.jee_air_rank = edit_stud_form_data.cleaned_data['jee_air_rank']
-            student_instance.room_no = edit_stud_form_data.cleaned_data['room_no']
-            student_instance.hostel = edit_stud_form_data.cleaned_data['hostel']
-            student_instance.alternative_email = edit_stud_form_data.cleaned_data['alternative_email']
-            student_instance.mobile_campus_alternative = edit_stud_form_data.cleaned_data['mobile_campus_alternative']
-            student_instance.mobile_campus = edit_stud_form_data.cleaned_data['mobile_campus']
-            student_instance.mobile_home = edit_stud_form_data.cleaned_data['mobile_home']
-            student_instance.address_line1 = edit_stud_form_data.cleaned_data['address_line1']
-            student_instance.address_line2 = edit_stud_form_data.cleaned_data['address_line2']
-            student_instance.address_line3 = edit_stud_form_data.cleaned_data['address_line3']
-            student_instance.pin_code = edit_stud_form_data.cleaned_data['pin_code']
-            student_instance.dept = edit_stud_form_data.cleaned_data['dept']
-            student_instance.prog = edit_stud_form_data.cleaned_data['prog']
-            student_instance.percentage_x = edit_stud_form_data.cleaned_data['percentage_x']
-            student_instance.percentage_xii = edit_stud_form_data.cleaned_data['percentage_xii']
-            student_instance.board_x = edit_stud_form_data.cleaned_data['board_x']
-            student_instance.board_xii = edit_stud_form_data.cleaned_data['board_xii']
-            student_instance.medium_x = edit_stud_form_data.cleaned_data['medium_x']
-            student_instance.medium_xii = edit_stud_form_data.cleaned_data['medium_xii']
-            student_instance.passing_year_x = edit_stud_form_data.cleaned_data['passing_year_x']
-            student_instance.passing_year_xii = edit_stud_form_data.cleaned_data['passing_year_xii']
-            student_instance.gap_in_study = edit_stud_form_data.cleaned_data['gap_in_study']
-            student_instance.gap_reason = edit_stud_form_data.cleaned_data['gap_reason']
-            student_instance.linkedin_link = edit_stud_form_data.cleaned_data['linkedin_link']
-            student_instance.cpi = edit_stud_form_data.cleaned_data['cpi']
-            student_instance.spi_1_sem = edit_stud_form_data.cleaned_data['spi_1_sem']
-            student_instance.spi_2_sem = edit_stud_form_data.cleaned_data['spi_2_sem']
-            student_instance.spi_3_sem = edit_stud_form_data.cleaned_data['spi_3_sem']
-            student_instance.spi_4_sem = edit_stud_form_data.cleaned_data['spi_4_sem']
-            student_instance.spi_5_sem = edit_stud_form_data.cleaned_data['spi_5_sem']
-            student_instance.spi_6_sem = edit_stud_form_data.cleaned_data['spi_6_sem']
-            student_instance.save()
+            stud = edit_stud_form_data.save(commit=False)
+            stud.save()
             return redirect('stud_home')
         else:
             args = dict(edit_stud_profile_form=edit_stud_form_data)
             return render(request, 'jobportal/Student/editstudprofile.html', args)
     else:
-        args = {}
-        args.update(csrf(request))
-        args['edit_stud_profile_form'] = EditStudProfileForm(initial={
-            'iitg_webmail': student_instance.iitg_webmail,
-            'roll_no': student_instance.roll_no,
-            'first_name': student_instance.first_name,
-            'middle_name': student_instance.middle_name,
-            'last_name': student_instance.last_name,
-            'dept': student_instance.dept,
-            'prog': student_instance.prog,
-            'dob': student_instance.dob,
-            'sex': student_instance.sex,
-            'category': student_instance.category,
-            'nationality': student_instance.nationality,
-            'minor_programme': student_instance.minor_programme,
-            'jee_air_rank': student_instance.jee_air_rank,
-            'room_no': student_instance.room_no,
-            'hostel': student_instance.hostel,
-            'alternative_email': student_instance.alternative_email,
-            'mobile_campus': student_instance.mobile_campus,
-            'mobile_campus_alternative': student_instance.mobile_campus_alternative,
-            'mobile_home': student_instance.mobile_home,
-            'address_line1': student_instance.address_line1,
-            'address_line2': student_instance.address_line2,
-            'address_line3': student_instance.address_line3,
-            'percentage_x': student_instance.percentage_x,
-            'percentage_xii': student_instance.percentage_xii,
-            'board_x': student_instance.board_x,
-            'board_xii': student_instance.board_xii,
-            'medium_x': student_instance.medium_x,
-            'medium_xii': student_instance.medium_xii,
-            'passing_year_x': student_instance.passing_year_x,
-            'passing_year_xii': student_instance.passing_year_xii,
-            'gap_in_study': student_instance.gap_in_study,
-            'gap_reason': student_instance.gap_reason,
-            'linkedin_link': student_instance.linkedin_link,
-            'cpi': student_instance.cpi,
-            'spi_1_sem': student_instance.spi_1_sem,
-            'spi_2_sem': student_instance.spi_2_sem,
-            'spi_3_sem': student_instance.spi_3_sem,
-            'spi_4_sem': student_instance.spi_4_sem,
-            'spi_5_sem': student_instance.spi_5_sem,
-            'spi_6_sem': student_instance.spi_6_sem
-        })
+        args = dict(edit_stud_profile_form=edit_stud_form_data)
         return render(request, 'jobportal/Student/editstudprofile.html', args)
 
 

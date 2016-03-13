@@ -1,6 +1,10 @@
 {% extends 'base_jobportal.html' %}
+{% load staticfiles %}
 {% load crispy_forms_tags %}
-
+{% block head_extra %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="{% static 'smart-selects/admin/js/chainedfk.js' %}"></script>
+{% endblock %}
 {% block account_setting%}
     <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
     <p><a href="#" title="">My Account</a></p>

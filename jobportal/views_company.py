@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import update_session_auth_hash
-from .models import UserProfile, Student, Alumni, Company, Job, Event, CompanyReg, StudentJobRelation, AlumJobRelation
+from .models import UserProfile, Student, Alumni, Company, Job, Event, StudentJobRelation, AlumJobRelation
 from .forms import CompanyLoginForm, JobEditForm, CompanySignupForm, CompanyProfileEdit
 
 COMPANY_LOGIN_URL = reverse_lazy('jobportal/companylogin')
@@ -21,43 +21,17 @@ COMPANY_LOGIN_URL = reverse_lazy('jobportal/companylogin')
 
 # Signup
 def signup(request):
+    company_signup_form = CompanySignupForm(request.POST or None)
+    print(company_signup_form)
     if request.method == 'POST':
-        company_signup_data = CompanySignupForm(request.POST)
-        if company_signup_data.is_valid():
-            CompanyReg.objects.create(
-                company_name_reg=company_signup_data.cleaned_data['company_name'],
-                description_reg=company_signup_data.cleaned_data['description'],
-                postal_address_reg=company_signup_data.cleaned_data['postal_address'],
-                website_reg=company_signup_data.cleaned_data['website'],
-                organization_type_reg=company_signup_data.cleaned_data['organization_type'],
-                industry_sector_reg=company_signup_data.cleaned_data['industry_sector'],
-                # HR Contact
-                head_hr_name_reg=company_signup_data.cleaned_data['head_hr_name'],
-                head_hr_email_reg=company_signup_data.cleaned_data['head_hr_email'],
-                head_hr_designation_reg=company_signup_data.cleaned_data['head_hr_designation'],
-                head_hr_mobile_reg=company_signup_data.cleaned_data['head_hr_mobile'],
-                head_hr_fax_reg=company_signup_data.cleaned_data['head_hr_fax'],
-                # Second HR Details
-                first_hr_name_reg=company_signup_data.cleaned_data['first_hr_name'],
-                first_hr_email_reg=company_signup_data.cleaned_data['first_hr_email'],
-                first_hr_designation_reg=company_signup_data.cleaned_data['first_hr_designation'],
-                first_hr_mobile_reg=company_signup_data.cleaned_data['first_hr_mobile'],
-                first_hr_fax_reg=company_signup_data.cleaned_data['first_hr_fax'],
-                # Third HR Details
-                second_hr_name_reg=company_signup_data.cleaned_data['second_hr_name'],
-                second_hr_email_reg=company_signup_data.cleaned_data['second_hr_email'],
-                second_hr_designation_reg=company_signup_data.cleaned_data['second_hr_designation'],
-                second_hr_mobile_reg=company_signup_data.cleaned_data['second_hr_mobile'],
-                second_hr_fax_reg=company_signup_data.cleaned_data['second_hr_fax']
-            )
+        if company_signup_form.is_valid():
+            company_signup_form.save()
             return redirect('signupconfirm')
         else:
-            args = {'signup_form': company_signup_data}
+            args = dict(signup_form=company_signup_form)
             return render(request, 'jobportal/Company/signup.html', args)
     else:
-        args = {}
-        args.update(csrf(request))
-        args['signup_form'] = CompanySignupForm()
+        args = dict(signup_form=company_signup_form)
         return render(request, 'jobportal/Company/signup.html', args)
 
 
@@ -167,57 +141,16 @@ def company_profile(request):
 @login_required(login_url=COMPANY_LOGIN_URL)
 def company_edit_profile(request, companyid):
     company_instance = get_object_or_404(Company, id=companyid)
+    company_profile_form = CompanyProfileEdit(request.POST or None, instance=company_instance)
     if request.POST:
-        company_profile_data = CompanyProfileEdit(request.POST)
-        if company_profile_data.is_valid():
-            company_instance.description = company_profile_data.cleaned_data['description']
-            company_instance.website = company_profile_data.cleaned_data['website']
-            company_instance.organization_type = company_profile_data.cleaned_data['organization_type']
-            company_instance.industry_sector = company_profile_data.cleaned_data['industry_sector']
-            company_instance.head_hr_designation = company_profile_data.cleaned_data['head_hr_designation']
-            company_instance.head_hr_email = company_profile_data.cleaned_data['head_hr_email']
-            company_instance.head_hr_mobile = company_profile_data.cleaned_data['head_hr_mobile']
-            company_instance.head_hr_fax = company_profile_data.cleaned_data['head_hr_fax']
-            company_instance.first_hr_name = company_profile_data.cleaned_data['first_hr_name']
-            company_instance.first_hr_designation = company_profile_data.cleaned_data['first_hr_designation']
-            company_instance.first_hr_email = company_profile_data.cleaned_data['first_hr_email']
-            company_instance.first_hr_mobile = company_profile_data.cleaned_data['first_hr_mobile']
-            company_instance.first_hr_fax = company_profile_data.cleaned_data['first_hr_fax']
-            company_instance.second_hr_name = company_profile_data.cleaned_data['second_hr_name']
-            company_instance.second_hr_email = company_profile_data.cleaned_data['second_hr_email']
-            company_instance.second_hr_designation = company_profile_data.cleaned_data['second_hr_designation']
-            company_instance.second_hr_mobile = company_profile_data.cleaned_data['second_hr_mobile']
-            company_instance.second_hr_fax = company_profile_data.cleaned_data['second_hr_fax']
-            company_instance.save()
-
+        if company_profile_form.is_valid():
+            company_profile_form.save()
             return redirect("companyprofile")
         else:
-            args = {'edit_profile_form': company_profile_data, 'company_instance_id': company_instance.id}
+            args = dict(edit_profile_form=company_profile_form, company_instance_id=company_instance.id)
             return render(request, 'jobportal/Company/editprofile.html', args)
     else:
-        args = {'company_instance_id': company_instance.id,
-                'edit_profile_form': CompanyProfileEdit(initial={
-                    'company_name': company_instance.company_name,
-                    'description': company_instance.description,
-                    'website': company_instance.website,
-                    'organization_type': company_instance.organization_type,
-                    'industry_sector': company_instance.industry_sector,
-                    'head_hr_designation': company_instance.head_hr_designation,
-                    'head_hr_email': company_instance.head_hr_email,
-                    'head_hr_mobile': company_instance.head_hr_mobile,
-                    'head_hr_fax': company_instance.head_hr_fax,
-                    'first_hr_name': company_instance.first_hr_name,
-                    'first_hr_designation': company_instance.first_hr_designation,
-                    'first_hr_email': company_instance.first_hr_email,
-                    'first_hr_mobile': company_instance.first_hr_mobile,
-                    'first_hr_fax': company_instance.first_hr_fax,
-                    'second_hr_name': company_instance.second_hr_name,
-                    'second_hr_email': company_instance.second_hr_email,
-                    'second_hr_designation': company_instance.second_hr_designation,
-                    'second_hr_mobile': company_instance.second_hr_mobile,
-                    'second_hr_fax': company_instance.second_hr_fax
-                })
-                }
+        args = dict(company_instance_id=company_instance.id, edit_profile_form=company_profile_form)
         return render(request, 'jobportal/Company/editprofile.html', args)
 
 

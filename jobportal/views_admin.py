@@ -11,7 +11,7 @@ from .models import UserProfile, Student, Company, Job, Year, Programme, \
     Department, Admin, CompanyReg, StudentJobRelation, AlumJobRelation, Alumni
 from .forms import AdminLoginForm, StudentSearchForm, AddStudent, \
     AddCompany, EditCompany, EditStudentAdmin
-from .forms import AddEditDeartment, AddEditProgramme, AddEditYear, AdminJobEditForm
+from .forms import AddEditDepartment, AddEditProgramme, AddEditYear, AdminJobEditForm
 
 ADMIN_LOGIN_URL = reverse_lazy('jobportal/admin_login')
 
@@ -110,7 +110,7 @@ def add_department(request):
     """
     if request.method == 'POST':
         # parse form data
-        department_form = AddEditDeartment(request.POST)
+        department_form = AddEditDepartment(request.POST)
         # if form is valid
         if department_form.is_valid():
             # save instance
@@ -121,7 +121,7 @@ def add_department(request):
             args = dict(department_add_form=department_form, add=True)
             return render(request, 'jobportal/Admin/add_edit_department.html', args)
     else:
-        args = dict(department_add_form=AddEditDeartment(), add=True)
+        args = dict(department_add_form=AddEditDepartment(), add=True)
         return render(request, 'jobportal/Admin/add_edit_department.html', args)
 
 
@@ -135,7 +135,7 @@ def edit_department(request, deptid):
     """
     if request.method == "POST":
         department_instance = Department.objects.get(id=deptid)
-        department_form = AddEditDeartment(request.POST, instance=department_instance)
+        department_form = AddEditDepartment(request.POST, instance=department_instance)
         if department_form.is_valid():
             department_form.save()
             # redirect to jobportal/departments
@@ -145,7 +145,7 @@ def edit_department(request, deptid):
             return render(request, 'jobportal/Admin/add_edit_department.html', args)
     else:
         department_instance = get_object_or_404(Department, id=deptid)
-        args = dict(department_edit_form=AddEditDeartment(instance=department_instance), edit=True, deptid=deptid)
+        args = dict(department_edit_form=AddEditDepartment(instance=department_instance), edit=True, deptid=deptid)
         return render(request, 'jobportal/Admin/add_edit_department.html', args)
 
 
@@ -392,55 +392,15 @@ def admin_manage(request):
 @login_required(login_url=ADMIN_LOGIN_URL)
 def add_student(request):
     if request.method == "POST":
-        print "added start"
         add_student_form_data = AddStudent(request.POST)
         if add_student_form_data.is_valid():
             username = add_student_form_data.cleaned_data['username']
             password = add_student_form_data.cleaned_data['password']
             user = User.objects.create_user(username=username, password=password)
             user_profile_instance = UserProfile.objects.create(user=user, login_type="Current Student")
-            Student.objects.create(
-                user=user_profile_instance,
-                iitg_webmail=username,
-                roll_no=add_student_form_data.cleaned_data['roll_no'],
-                first_name=add_student_form_data.cleaned_data['first_name'],
-                middle_name=add_student_form_data.cleaned_data['middle_name'],
-                last_name=add_student_form_data.cleaned_data['last_name'],
-                dob=add_student_form_data.cleaned_data['dob'],
-                sex=add_student_form_data.cleaned_data['sex'],
-                category=add_student_form_data.cleaned_data['category'],
-                nationality=add_student_form_data.cleaned_data['nationality'],
-                minor_programme=add_student_form_data.cleaned_data['minor_programme'],
-                jee_air_rank=add_student_form_data.cleaned_data['jee_air_rank'],
-                dept=add_student_form_data.cleaned_data['dept'],
-                year=add_student_form_data.cleaned_data['year'],
-                prog=add_student_form_data.cleaned_data['prog'],
-                room_no=add_student_form_data.cleaned_data['room_no'],
-                hostel=add_student_form_data.cleaned_data['hostel'],
-                alternative_email=add_student_form_data.cleaned_data['alternative_email'],
-                mobile_campus_alternative=add_student_form_data.cleaned_data['mobile_campus_alternative'],
-                mobile_campus=add_student_form_data.cleaned_data['mobile_campus'],
-                mobile_home=add_student_form_data.cleaned_data['mobile_home'],
-                address_line1=add_student_form_data.cleaned_data['address_line1'],
-                address_line2=add_student_form_data.cleaned_data['address_line2'],
-                address_line3=add_student_form_data.cleaned_data['address_line3'],
-                pin_code=add_student_form_data.cleaned_data['pin_code'],
-                percentage_x=add_student_form_data.cleaned_data['percentage_x'],
-                percentage_xii=add_student_form_data.cleaned_data['percentage_xii'],
-                gap_in_study=add_student_form_data.cleaned_data['gap_in_study'],
-                gap_reason=add_student_form_data.cleaned_data['gap_reason'],
-                linkedin_link=add_student_form_data.cleaned_data['linkedin_link'],
-                ppo=add_student_form_data.cleaned_data['ppo'],
-                intern2=add_student_form_data.cleaned_data['intern2'],
-                intern3=add_student_form_data.cleaned_data['intern3'],
-                cpi=add_student_form_data.cleaned_data['cpi'],
-                spi_1_sem=add_student_form_data.cleaned_data['spi_1_sem'],
-                spi_2_sem=add_student_form_data.cleaned_data['spi_2_sem'],
-                spi_3_sem=add_student_form_data.cleaned_data['spi_3_sem'],
-                spi_4_sem=add_student_form_data.cleaned_data['spi_4_sem'],
-                spi_5_sem=add_student_form_data.cleaned_data['spi_5_sem'],
-                spi_6_sem=add_student_form_data.cleaned_data['spi_6_sem']
-            )
+            student_instance = add_student_form_data.save(commit=False)
+            student_instance.user = user_profile_instance
+            student_instance.save()
             args = {'created': 'Student', 'webmail': username}
             return render(request, 'jobportal/Admin/admin_manage.html', args)
         else:
@@ -492,97 +452,17 @@ def review_stud_profile(request, studid):
 # Edit student profile
 @login_required(login_url=ADMIN_LOGIN_URL)
 def edit_student(request, studid):
+    student_instance = get_object_or_404(Student, id=studid)
+    edit_student_form = EditStudentAdmin(request.POST or None, instance=student_instance)
     if request.method == "POST":
-        edit_student_form_data = EditStudentAdmin(request.POST)
-        if edit_student_form_data.is_valid():
-            student_instance = get_object_or_404(Student, id=studid)
-            student_instance.roll_no = edit_student_form_data.cleaned_data['roll_no']
-            student_instance.first_name = edit_student_form_data.cleaned_data['first_name']
-            student_instance.middle_name = edit_student_form_data.cleaned_data['middle_name']
-            student_instance.last_name = edit_student_form_data.cleaned_data['last_name']
-            student_instance.dob = edit_student_form_data.cleaned_data['dob']
-            student_instance.sex = edit_student_form_data.cleaned_data['sex']
-            student_instance.category = edit_student_form_data.cleaned_data['category']
-            student_instance.nationality = edit_student_form_data.cleaned_data['nationality']
-            student_instance.minor_programme = edit_student_form_data.cleaned_data['minor_programme']
-            student_instance.jee_air_rank = edit_student_form_data.cleaned_data['jee_air_rank']
-            student_instance.hostel = edit_student_form_data.cleaned_data['hostel']
-            student_instance.room_no = edit_student_form_data.cleaned_data['room_no']
-            student_instance.alternative_email = edit_student_form_data.cleaned_data['alternative_email']
-            student_instance.mobile_campus = edit_student_form_data.cleaned_data['mobile_campus']
-            student_instance.mobile_campus_alternative = edit_student_form_data.cleaned_data[
-                'mobile_campus_alternative']
-            student_instance.mobile_home = edit_student_form_data.cleaned_data['mobile_home']
-            student_instance.dept = edit_student_form_data.cleaned_data['dept']
-            student_instance.year = edit_student_form_data.cleaned_data['year']
-            student_instance.prog = edit_student_form_data.cleaned_data['prog']
-            student_instance.address_line1 = edit_student_form_data.cleaned_data['address_line1']
-            student_instance.address_line2 = edit_student_form_data.cleaned_data['address_line2']
-            student_instance.address_line3 = edit_student_form_data.cleaned_data['address_line3']
-            student_instance.pin_code = edit_student_form_data.cleaned_data['pin_code']
-            student_instance.percentage_xii = edit_student_form_data.cleaned_data['percentage_xii']
-            student_instance.percentage_x = edit_student_form_data.cleaned_data['percentage_x']
-            student_instance.gap_reason = edit_student_form_data.cleaned_data['gap_reason']
-            student_instance.gap_in_study = edit_student_form_data.cleaned_data['gap_in_study']
-            student_instance.ppo = edit_student_form_data.cleaned_data['ppo']
-            student_instance.intern2 = edit_student_form_data.cleaned_data['intern2']
-            student_instance.intern3 = edit_student_form_data.cleaned_data['intern3']
-            student_instance.cpi = edit_student_form_data.cleaned_data['cpi']
-            student_instance.spi_1_sem = edit_student_form_data.cleaned_data['spi_1_sem']
-            student_instance.spi_2_sem = edit_student_form_data.cleaned_data['spi_2_sem']
-            student_instance.spi_3_sem = edit_student_form_data.cleaned_data['spi_3_sem']
-            student_instance.spi_4_sem = edit_student_form_data.cleaned_data['spi_4_sem']
-            student_instance.spi_5_sem = edit_student_form_data.cleaned_data['spi_5_sem']
-            student_instance.spi_6_sem = edit_student_form_data.cleaned_data['spi_6_sem']
-            student_instance.save()
+        if edit_student_form.is_valid():
+            edit_student_form.save()
             return redirect('review_stud_profile', studid=studid)
         else:
-            args = {'student_profile_edit_form': edit_student_form_data, 'studid': studid}
+            args = dict(student_profile_edit_form=edit_student_form, studid=studid)
             return render(request, 'jobportal/Admin/edit_student_profile.html', args)
     else:
-        args = {}
-        args.update(csrf(request))
-        student_instance = Student.objects.get(id=studid)
-        args['student_profile_edit_form'] = EditStudentAdmin(initial={
-            'roll_no': student_instance.roll_no,
-            'first_name': student_instance.first_name,
-            'middle_name': student_instance.middle_name,
-            'last_name': student_instance.last_name,
-            'dob': student_instance.dob,
-            'sex': student_instance.sex,
-            'category': student_instance.category,
-            'nationality': student_instance.nationality,
-            'minor_programme': student_instance.minor_programme,
-            'jee_air_rank': student_instance.jee_air_rank,
-            'dept': student_instance.dept,
-            'year': student_instance.year,
-            'prog': student_instance.prog,
-            'hostel': student_instance.hostel,
-            'room_no': student_instance.room_no,
-            'alternative_email': student_instance.alternative_email,
-            'mobile_campus': student_instance.mobile_campus,
-            'mobile_campus_alternative': student_instance.mobile_campus_alternative,
-            'mobile_home': student_instance.mobile_home,
-            'address_line1': student_instance.address_line1,
-            'address_line2': student_instance.address_line2,
-            'address_line3': student_instance.address_line3,
-            'pin_code': student_instance.pin_code,
-            'percentage_x': student_instance.percentage_x,
-            'percentage_xii': student_instance.percentage_xii,
-            'gap_in_study': student_instance.gap_in_study,
-            'gap_reason': student_instance.gap_reason,
-            'ppo': student_instance.ppo,
-            'intern2': student_instance.intern2,
-            'intern3': student_instance.intern3,
-            'cpi': student_instance.cpi,
-            'spi_1_sem': student_instance.spi_1_sem,
-            'spi_2_sem': student_instance.spi_2_sem,
-            'spi_3_sem': student_instance.spi_3_sem,
-            'spi_4_sem': student_instance.spi_4_sem,
-            'spi_5_sem': student_instance.spi_5_sem,
-            'spi_6_sem': student_instance.spi_6_sem
-        })
-        args['studid'] = studid
+        args = dict(student_profile_edit_form=edit_student_form, studid=studid)
         return render(request, 'jobportal/Admin/edit_student_profile.html', args)
 
 
@@ -597,42 +477,19 @@ def companies(request):
 # Add company manually
 @login_required(login_url=ADMIN_LOGIN_URL)
 def add_company(request):
+    add_company_form = AddCompany(request.POST or None)
     if request.method == "POST":
-        add_company_form_data = AddCompany(request.POST)
-        if add_company_form_data.is_valid():
-            username = add_company_form_data.cleaned_data['username']
-            password = add_company_form_data.cleaned_data['password']
+        if add_company_form.is_valid():
+            username = add_company_form.cleaned_data['username']
+            password = add_company_form.cleaned_data['password']
             user = User.objects.create_user(username=username, password=password)
             user_profile_instance = UserProfile.objects.create(user=user, login_type="Company")
-            Company.objects.create(
-                user=user_profile_instance,
-                company_name=add_company_form_data.cleaned_data['company_name'],
-                description=add_company_form_data.cleaned_data['description'],
-                website=add_company_form_data.cleaned_data['website'],
-                organization_type=add_company_form_data.cleaned_data['organization_type'],
-                industry_sector=add_company_form_data.cleaned_data['industry_sector'],
-                head_hr_designation=add_company_form_data.cleaned_data['head_hr_designation'],
-                head_hr_email=add_company_form_data.cleaned_data['head_hr_email'],
-                head_hr_mobile=add_company_form_data.cleaned_data['head_hr_mobile'],
-                head_hr_fax=add_company_form_data.cleaned_data['head_hr_fax'],
-                first_hr_name=add_company_form_data.cleaned_data['first_hr_name'],
-                first_hr_designation=add_company_form_data.cleaned_data['first_hr_designation'],
-                first_hr_email=add_company_form_data.cleaned_data['first_hr_email'],
-                first_hr_mobile=add_company_form_data.cleaned_data['first_hr_mobile'],
-                first_hr_fax=add_company_form_data.cleaned_data['first_hr_fax'],
-                second_hr_name=add_company_form_data.cleaned_data['second_hr_name'],
-                second_hr_email=add_company_form_data.cleaned_data['second_hr_email'],
-                second_hr_designation=add_company_form_data.cleaned_data['second_hr_designation'],
-                second_hr_mobile=add_company_form_data.cleaned_data['second_hr_mobile'],
-                second_hr_fax=add_company_form_data.cleaned_data['second_hr_fax'],
-                approved=add_company_form_data.cleaned_data['approved'],
-                sent_back=add_company_form_data.cleaned_data['sent_back']
-            )
-            messages.add_message(request, messages.SUCCESS, "Company " + add_company_form_data.cleaned_data[
-                'company_name'] + " has been successfully added.")
+            company_instance = add_company_form.save()
+            company_instance.user = user_profile_instance
+            company_instance.save()
             return redirect("companies")
         else:
-            add_company_form = add_company_form_data
+            add_company_form = add_company_form
             args = {'add_company_form': add_company_form, 'request': False}
             return render(request, 'jobportal/Admin/add_company.html', args)
     else:
@@ -666,69 +523,20 @@ def edit_company(request, companyid):
     :param companyid: id of Company instance
     :return: HttpResponse
     """
+    company_instance = get_object_or_404(Company, id=companyid)
+    edit_company_form = EditCompany(request.POST or None, instance=company_instance)
     if request.method == "POST":
-        # parse submitted form data
-        edit_company_data = EditCompany(request.POST)
         # if form is valid
-        if edit_company_data.is_valid():
+        if edit_company_form.is_valid():
             # TODO : Convert this to model form
             # TODO : Use create_instance method instead of line by line adding
-            company_instance = get_object_or_404(Company, id=companyid)
-            company_instance.company_name = edit_company_data.cleaned_data['company_name']
-            company_instance.description = edit_company_data.cleaned_data['description']
-            company_instance.website = edit_company_data.cleaned_data['website']
-            company_instance.organization_type = edit_company_data.cleaned_data['organization_type']
-            company_instance.industry_sector = edit_company_data.cleaned_data['industry_sector']
-            company_instance.head_hr_designation = edit_company_data.cleaned_data['head_hr_designation']
-            company_instance.head_hr_email = edit_company_data.cleaned_data['head_hr_email']
-            company_instance.head_hr_mobile = edit_company_data.cleaned_data['head_hr_mobile']
-            company_instance.head_hr_fax = edit_company_data.cleaned_data['head_hr_fax']
-            company_instance.first_hr_name = edit_company_data.cleaned_data['first_hr_name']
-            company_instance.first_hr_designation = edit_company_data.cleaned_data['first_hr_designation']
-            company_instance.first_hr_email = edit_company_data.cleaned_data['first_hr_email']
-            company_instance.first_hr_mobile = edit_company_data.cleaned_data['first_hr_mobile']
-            company_instance.first_hr_fax = edit_company_data.cleaned_data['first_hr_fax']
-            company_instance.second_hr_name = edit_company_data.cleaned_data['second_hr_name']
-            company_instance.second_hr_email = edit_company_data.cleaned_data['second_hr_email']
-            company_instance.second_hr_designation = edit_company_data.cleaned_data['second_hr_designation']
-            company_instance.second_hr_mobile = edit_company_data.cleaned_data['second_hr_mobile']
-            company_instance.second_hr_fax = edit_company_data.cleaned_data['second_hr_fax']
-            company_instance.approved = edit_company_data.cleaned_data['approved']
-            company_instance.sent_back = edit_company_data.cleaned_data['sent_back']
-            company_instance.save()
+            edit_company_form.save()
             return redirect('review_company_profile', companyid=companyid)
         else:
-            args = dict(company_profile_edit_form=edit_company_data, companyid=companyid)
+            args = dict(company_profile_edit_form=edit_company_form, companyid=companyid)
             return render(request, 'jobportal/Admin/edit_company_profile.html', args)
     else:
-        args = {}
-        args.update(csrf(request))
-        company_instance = get_object_or_404(Company, id=companyid)
-        args['company_profile_edit_form'] = EditCompany(initial={
-            # 'username': company_instance.user.user.username,
-            'company_name': company_instance.company_name,
-            'description': company_instance.description,
-            'website': company_instance.website,
-            'organization_type': company_instance.organization_type,
-            'industry_sector': company_instance.industry_sector,
-            'head_hr_designation': company_instance.head_hr_designation,
-            'head_hr_email': company_instance.head_hr_email,
-            'head_hr_mobile': company_instance.head_hr_mobile,
-            'head_hr_fax': company_instance.head_hr_fax,
-            'first_hr_name': company_instance.first_hr_name,
-            'first_hr_designation': company_instance.first_hr_designation,
-            'first_hr_email': company_instance.first_hr_email,
-            'first_hr_mobile': company_instance.first_hr_mobile,
-            'first_hr_fax': company_instance.first_hr_fax,
-            'second_hr_name': company_instance.second_hr_name,
-            'second_hr_email': company_instance.second_hr_email,
-            'second_hr_designation': company_instance.second_hr_designation,
-            'second_hr_mobile': company_instance.second_hr_mobile,
-            'second_hr_fax': company_instance.second_hr_fax,
-            'approved': company_instance.approved,
-            'sent_back': company_instance.sent_back
-        })
-        args['companyid'] = companyid
+        args = dict(company_profile_edit_form=edit_company_form, companyid=companyid)
         return render(request, 'jobportal/Admin/edit_company_profile.html', args)
 
 
@@ -773,36 +581,11 @@ def add_company_by_signup_request(request, companyregid):
             password = add_company_form_data.cleaned_data['password']
             user = User.objects.create_user(username=username, password=password)
             user_profile_instance = UserProfile.objects.create(user=user, login_type="Company")
-            company_instance = Company.objects.create(
-                user=user_profile_instance,
-                company_name=add_company_form_data.cleaned_data['company_name'],
-                description=add_company_form_data.cleaned_data['description'],
-                website=add_company_form_data.cleaned_data['website'],
-                organization_type=add_company_form_data.cleaned_data['organization_type'],
-                industry_sector=add_company_form_data.cleaned_data['industry_sector'],
-                head_hr_designation=add_company_form_data.cleaned_data['head_hr_designation'],
-                head_hr_email=add_company_form_data.cleaned_data['head_hr_email'],
-                head_hr_mobile=add_company_form_data.cleaned_data['head_hr_mobile'],
-                head_hr_fax=add_company_form_data.cleaned_data['head_hr_fax'],
-                first_hr_name=add_company_form_data.cleaned_data['first_hr_name'],
-                first_hr_designation=add_company_form_data.cleaned_data['first_hr_designation'],
-                first_hr_email=add_company_form_data.cleaned_data['first_hr_email'],
-                first_hr_mobile=add_company_form_data.cleaned_data['first_hr_mobile'],
-                first_hr_fax=add_company_form_data.cleaned_data['first_hr_fax'],
-                second_hr_name=add_company_form_data.cleaned_data['second_hr_name'],
-                second_hr_email=add_company_form_data.cleaned_data['second_hr_email'],
-                second_hr_designation=add_company_form_data.cleaned_data['second_hr_designation'],
-                second_hr_mobile=add_company_form_data.cleaned_data['second_hr_mobile'],
-                second_hr_fax=add_company_form_data.cleaned_data['second_hr_fax'],
-                approved=add_company_form_data.cleaned_data['approved'],
-                sent_back=add_company_form_data.cleaned_data['sent_back']
-            )
-            print "Test Starts"
-            print company_instance.company_name
-            companyreg_instance = CompanyReg.objects.get(company_name_reg=company_instance.company_name)
-            print companyreg_instance.company_name_reg
+            company_instance = add_company_form_data.save(commit=False)
+            company_instance.user = user_profile_instance
+            company_instance.save()
+            companyreg_instance = CompanyReg.objects.get(id=companyregid)
             companyreg_instance.delete()
-            print "Test Ends"
             messages.add_message(request, messages.SUCCESS, "Company " + add_company_form_data.cleaned_data[
                 'company_name'] + " has been successfully added.")
             return redirect("companies")
@@ -818,6 +601,7 @@ def add_company_by_signup_request(request, companyregid):
             'website': companyreg_instance.website_reg,
             'organization_type': companyreg_instance.organization_type_reg,
             'industry_sector': companyreg_instance.industry_sector_reg,
+            'head_hr_name': companyreg_instance.head_hr_name_reg,
             'head_hr_designation': companyreg_instance.head_hr_designation_reg,
             'head_hr_email': companyreg_instance.head_hr_email_reg,
             'head_hr_mobile': companyreg_instance.head_hr_mobile_reg,
@@ -826,12 +610,7 @@ def add_company_by_signup_request(request, companyregid):
             'first_hr_designation': companyreg_instance.first_hr_designation_reg,
             'first_hr_email': companyreg_instance.first_hr_email_reg,
             'first_hr_mobile': companyreg_instance.first_hr_mobile_reg,
-            'first_hr_fax': companyreg_instance.first_hr_fax_reg,
-            'second_hr_name': companyreg_instance.second_hr_name_reg,
-            'second_hr_email': companyreg_instance.second_hr_email_reg,
-            'second_hr_designation': companyreg_instance.second_hr_designation_reg,
-            'second_hr_mobile': companyreg_instance.second_hr_mobile_reg,
-            'second_hr_fax': companyreg_instance.second_hr_fax_reg
+            'first_hr_fax': companyreg_instance.first_hr_fax_reg
         })
         args = {'add_company_form': add_company_form, 'request': True, 'companyregid': companyregid}
         return render(request, 'jobportal/Admin/add_company.html', args)
@@ -900,7 +679,7 @@ def approve_action(request, applicant_type, relationid):
         relation_instance = get_object_or_404(StudentJobRelation, id=relationid)
     if applicant_type == "alum":
         relation_instance = get_object_or_404(AlumJobRelation, id=relationid)
-    args = {'relation_instance': relation_instance, 'applicant_type': applicant_type}
+    args = dict(relation_instance=relation_instance, applicant_type=applicant_type)
     return render(request, 'jobportal/Admin/approve_actions.html', args)
 
 

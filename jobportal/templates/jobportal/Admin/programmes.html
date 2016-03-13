@@ -31,7 +31,9 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th><strong>Name</strong></th>
+            <th><strong>Year</strong></th>
+            <th><strong>Department</strong></th>
+            <th><strong>Programme</strong></th>
             <th><strong>Edit</strong></th>
             <th><strong>Delete</strong></th>
         </tr>
@@ -39,8 +41,9 @@
         <tbody>
         {% for programme in programmes %}
         <tr>
+            <td>{{ programme.year }}</td>
+            <td>{{ programme.dept }}</td>
             <td>{{ programme.name }}</td>
-
             <td><a href="{% url 'edit_programme' programme.id %}"> Edit</a></td>
             <td><a href="{% url 'delete_programme' programme.id %}"> Delete</a></td>
         </tr>
