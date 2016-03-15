@@ -8,7 +8,6 @@ from . import views_print
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     # Current Student Urls
-    # student login
     url(r'^stud_login/$', views.stud_login, name='stud_login'),
     # student logout
     url(r'^stud_logout/$', views.stud_logout, name='stud_logout'),
@@ -34,6 +33,9 @@ urlpatterns = [
     url(r'^delcv/(?P<cvno>\d+)$', views.del_cv, name='deletecv'),
     # TODO: Yet to be done
     url(r'^viewevents/$', views.eventlist, name='viewevents'),
+    # upload avatar and signature
+    url(r'^viewavatar/$', views.view_avatar, name='viewavatar'),
+    url(r'^avatarupload/$', views.upload_avatar_sign, name='avatarupload'),
     # ----------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------
     # Alumni Urls
@@ -84,6 +86,8 @@ urlpatterns = [
     url(r'^companyhome/$', views_company.company_home, name='companyhome'),
     url(r'^companyprofile/$', views_company.company_profile, name='companyprofile'),
     url(r'^companyviewjobs/$', views_company.view_jobs, name='companyviewjobs'),
+    url(r'^companyjob/(?P<jobid>\d+)$', views_company.view_job, name='companyjob'),
+    url(r'^company_add_progs/(?P<jobid>\d+)$', views_company.add_progs, name='company_add_progs'),
     url(r'^companyaddjob/$', views_company.company_add_job, name='companyaddjob'),
     url(r'^companyeditjob/(?P<jobid>\d+)$', views_company.company_edit_job, name='companyeditjob'),
     url(r'^companydeljob/(?P<jobid>\d+)$', views_company.company_del_job, name='companydeljob'),
@@ -142,6 +146,7 @@ urlpatterns = [
     # Jobs
     url(r'^jobs/$', views_admin.jobs, name='jobs'),
     url(r'^review_job/(?P<jobid>\d+)$', views_admin.review_job, name='review_job'),
+    url(r'^edit_progs/(?P<jobid>\d+)$', views_admin.edit_progs, name='edit_progs'),
     url(r'^edit_job/(?P<jobid>\d+)$', views_admin.edit_job, name='edit_job'),
     url(r'^delete_job/(?P<jobid>\d+)$', views_admin.delete_job, name='delete_job'),
     url(r'^job_candidates/(?P<jobid>\d+)$', views_admin.job_candidates, name='job_candidates'),

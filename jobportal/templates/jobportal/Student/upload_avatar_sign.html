@@ -1,4 +1,5 @@
 {% extends 'base_jobportal.html' %}
+{% load crispy_forms_tags %}
 
 {% block account_setting%}
 <p><a href="{% url 'stud_logout' %}" title="alum_logout">Logout</a></p>
@@ -13,26 +14,22 @@
 </li>
 <li><a href="{% url 'editstudprofile' %}"><span class="glyphicon glyphicon-pencil"></span> Edit Profile</a></li>
 <li><a href="{% url 'viewcvs' %}"><span class="glyphicon glyphicon-upload"></span> Upload CV</a></li>
-<li><a href="{% url 'viewavatar' %}"><span class="glyphicon glyphicon-upload"></span> Upload Avatar</a></li>
 <li><a href="{% url 'viewevents' %}"><span class="glyphicon glyphicon-calendar"></span> Calendar</a></li>
 <li><a href="{% url 'mentormentee:stud_proposals' %}"><span class="glyphicon glyphicon-inbox"></span> Research Proposals</a>
 </li>
+
 {% endblock %}
 
 {% block content %}
-<h3>Welcome, <i>{{ stud.first_name }}</i></h3>
-<p>This is your Personal Dashboard for all the functions.</p>
+<h2 class="sub-header">Upload Avatar and Signature</h2>
 <hr/>
-{% if stud.avatar %}
-<img src="{{ stud.avatar.thumbnail.200x200 }}">
-{%endif%}
-{% if stud.avatar %}
-<img src="{{ stud.avatar.url }}">
-{%endif%}
-
-<div class="profile-box well row">
-    <div class="user-img-holder thumbnail col-md-6">
-    </div>
-    <p class="col-md-6">Name: {{ stud.first_name }} {{ stud.last_name }}<br>Course:<br>Current Address:</p>
+<div class="col-md-9">
+    <form enctype="multipart/form-data" action="{% url 'avatarupload' %}" method="post" accept-charset="utf-8">
+        <div class="well">
+            {% csrf_token %}
+            {{avatar_sign_form | crispy }}
+            <input type="submit" class="btn btn-primary" value="Upload">
+        </div>
+    </form>
 </div>
 {% endblock %}

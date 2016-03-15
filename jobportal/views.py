@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile, Student, Alumni, Company, \
     Job, Event, StudentJobRelation
 from .forms import StudentLoginForm, EditStudProfileForm, StudCVForm, \
-    RequestEventForm, SelectCVForm
+    RequestEventForm, SelectCVForm, AvatarSignForm
 from datetime import datetime
 from reportlab.pdfgen import canvas
 from io import BytesIO
@@ -382,3 +382,28 @@ def eventlist(request):
     event_list = Event.objects.filter(finalised=True)
     args = {'event_list': event_list}
     return render(request, 'jobportal/Student/event.html', args)
+
+
+@login_required(login_url=STUD_LOGIN_URL)
+def view_avatar(request):
+    student_instance = Student.objects.get(id=request.session['student_instance_id'])
+    args = {'student_instance': student_instance}
+    return render(request, 'jobportal/Student/viewavatar.html', args)
+
+
+@login_required(login_url=STUD_LOGIN_URL)
+def upload_avatar_sign(request):
+    student_instance = get_object_or_404(Student, id=request.session['student_instance_id'])
+    avatar_sign_form = AvatarSignForm(request.POST or None, request.FILES or None, instance=student_instance)
+    if request.method == 'POST':
+        if avatar_sign_form.is_valid():
+            print avatar_sign_form.cleaned_data['avatar']
+            print avatar_sign_form.cleaned_data['signature']
+            avatar_sign_form.save()
+            return render(request, 'jobportal/Student/stud_home.html', dict(stud=student_instance))
+        else:
+            args = dict(avatar_sign_form=avatar_sign_form, stud=student_instance)
+            return render(request, 'jobportal/Student/upload_avatar_sign.html', args)
+    else:
+        args = dict(avatar_sign_form=avatar_sign_form, stud=student_instance)
+        return render(request, 'jobportal/Student/upload_avatar_sign.html', args)

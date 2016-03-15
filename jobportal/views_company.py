@@ -13,8 +13,8 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import update_session_auth_hash
-from .models import UserProfile, Student, Alumni, Company, Job, Event, StudentJobRelation, AlumJobRelation
-from .forms import CompanyLoginForm, JobEditForm, CompanySignupForm, CompanyProfileEdit
+from .models import *
+from .forms import *
 
 COMPANY_LOGIN_URL = reverse_lazy('jobportal/companylogin')
 
@@ -175,159 +175,43 @@ def company_add_job(request):
     # TODO: Look at security implication of this
     # get currently logged in Company instance
     company_instance = Company.objects.get(id=request.session['company_instance_id'])
+    add_job_form = JobEditForm(request.POST or None)
     if request.method == "POST":
         # parse form data
-        job_add_form = JobEditForm(request.POST)
-        if job_add_form.is_valid():
-            job_instance = Job(company_owner=company_instance,
-                               posted_by_alumnus=False,
-                               posted_by_company=True,
-                               description=job_add_form.cleaned_data['description'],
-                               designation=job_add_form.cleaned_data['designation'],
-                               open_for_alum=job_add_form.cleaned_data['open_for_alum'],
-                               cpi_shortlist=job_add_form.cleaned_data['cpi_shortlist'],
-                               percentage_x=job_add_form.cleaned_data['percentage_x'],
-                               percentage_xii=job_add_form.cleaned_data['percentage_xii'],
-                               other_requirements=job_add_form.cleaned_data['other_requirements'],
-                               num_openings=job_add_form.cleaned_data['num_openings'],
-                               currency=job_add_form.cleaned_data['currency'],
-                               ctc_btech=job_add_form.cleaned_data['ctc_btech'],
-                               ctc_mtech=job_add_form.cleaned_data['ctc_mtech'],
-                               ctc_ma=job_add_form.cleaned_data['ctc_ma'],
-                               ctc_msc=job_add_form.cleaned_data['ctc_msc'],
-                               ctc_phd=job_add_form.cleaned_data['ctc_phd'],
-                               gross_btech=job_add_form.cleaned_data['gross_btech'],
-                               gross_mtech=job_add_form.cleaned_data['gross_mtech'],
-                               gross_ma=job_add_form.cleaned_data['gross_ma'],
-                               gross_msc=job_add_form.cleaned_data['gross_msc'],
-                               gross_phd=job_add_form.cleaned_data['gross_phd'],
-                               take_home_during_training=job_add_form.cleaned_data['take_home_during_training'],
-                               take_home_after_training=job_add_form.cleaned_data['take_home_after_training'],
-                               bonus=job_add_form.cleaned_data['bonus'],
-                               bond=job_add_form.cleaned_data['bond'],
-                               bond_details=job_add_form.cleaned_data['bond_details'],
-                               profile_name=job_add_form.cleaned_data['profile_name'],
-                               posted_on=datetime.now(),
-                               last_updated=datetime.now(),
-                               )
+        if add_job_form.is_valid():
+            job_instance = add_job_form.save(commit=False)
+            job_instance.company_owner = company_instance
+            job_instance.posted_by_alumnus = False
+            job_instance.posted_by_company = True
+            job_instance.posted_on = datetime.now()
+            job_instance.last_updated = datetime.now()
             job_instance.save()
-
-            dept_list = job_add_form.cleaned_data['dept']
-            # current_year_list = job_add_form.cleaned_data['current_year']
-            prog_list = job_add_form.cleaned_data['prog']
-
-            for adept in dept_list:
-                job_instance.dept.add(adept)
-            # for acurrent_year in current_year_list:
-            #     job_instance.current_year.add(acurrent_year)
-            for aprog in prog_list:
-                job_instance.prog.add(aprog)
-
+            job_prog_rel = ProgrammeJobRelation(job=job_instance)
+            job_prog_rel.save()
             return redirect('companyviewjobs')
         else:
-            args = {}
-            args.update(csrf(request))
-            args['add_job_form'] = job_add_form
-            return render(request, 'jobportal/Company/postjob.html', args)
+            return render(request, 'jobportal/Company/postjob.html', dict(add_job_form=add_job_form))
     else:
-        args = dict(add_job_form=JobEditForm())
-        return render(request, 'jobportal/Company/postjob.html', args)
+        return render(request, 'jobportal/Company/postjob.html', dict(add_job_form=add_job_form))
 
 
 # Edit an already posted job/internship
 @login_required(login_url=COMPANY_LOGIN_URL)
 def company_edit_job(request, jobid):
-    job = Job.objects.get(id=jobid)
+    job_instance = Job.objects.get(id=jobid)
+    job_add_form = JobEditForm(request.POST or None, instance=job_instance)
     if request.method == "POST":
-        job_add_form = JobEditForm(request.POST)
         if job_add_form.is_valid():
-            job.description = job_add_form.cleaned_data['description']
-            job.designation = job_add_form.cleaned_data['designation']
-            job.open_for_alum = job_add_form.cleaned_data['open_for_alum']
-            job.cpi_shortlist = job_add_form.cleaned_data['cpi_shortlist']
-            job.minimum_cpi = job_add_form.cleaned_data['minimum_cpi']
-            job.percentage_x = job_add_form.cleaned_data['percentage_x']
-            job.percentage_xii = job_add_form.cleaned_data['percentage_xii']
-            job.other_requirements = job_add_form.cleaned_data['other_requirements']
-            job.num_openings = job_add_form.cleaned_data['num_openings']
-            job.currency = job_add_form.cleaned_data['currency']
-            job.ctc_btech = job_add_form.cleaned_data['ctc_btech']
-            job.ctc_mtech = job_add_form.cleaned_data['ctc_mtech']
-            job.ctc_ma = job_add_form.cleaned_data['ctc_ma']
-            job.ctc_msc = job_add_form.cleaned_data['ctc_msc']
-            job.ctc_phd = job_add_form.cleaned_data['ctc_phd']
-            job.gross_btech = job_add_form.cleaned_data['gross_btech']
-            job.gross_mtech = job_add_form.cleaned_data['gross_mtech']
-            job.gross_ma = job_add_form.cleaned_data['gross_ma']
-            job.gross_msc = job_add_form.cleaned_data['gross_msc']
-            job.gross_phd = job_add_form.cleaned_data['gross_phd']
-            job.take_home_during_training = job_add_form.cleaned_data['take_home_during_training']
-            job.take_home_after_training = job_add_form.cleaned_data['take_home_after_training']
-            job.bonus = job_add_form.cleaned_data['bonus']
-            job.bond = job_add_form.cleaned_data['bond']
-            job.bond_details = job_add_form.cleaned_data['bond_details']
-            job.profile_name = job_add_form.cleaned_data['profile_name']
-            job.last_updated = datetime.now()
-            job.save()
-
-            dept_list = job_add_form.cleaned_data['dept']
-            current_year_list = job_add_form.cleaned_data['current_year']
-            prog_list = job_add_form.cleaned_data['prog']
-
-            job.dept.clear()
-            job.current_year.clear()
-            job.prog.clear()
-
-            for adept in dept_list:
-                job.dept.add(adept)
-            for acurrent_year in current_year_list:
-                job.current_year.add(acurrent_year)
-            for aprog in prog_list:
-                job.prog.add(aprog)
-
+            job_instance = job_add_form.save(commit=False)
+            job_instance.last_updated = datetime.now()
+            job_instance.save()
             return redirect('companyviewjobs')
         else:
-            args = {}
-            args.update(csrf(request))
-            args['edit_job_form'] = job_add_form
-            args['job'] = job
+            args = dict(edit_job_form=job_add_form, job=job_instance)
             return render(request, 'jobportal/Company/editjob.html', args)
 
     else:
-        args = {}
-        args.update(csrf(request))
-        args['edit_job_form'] = JobEditForm(initial={
-            'description': job.description,
-            'designation': job.designation,
-            'open_for_alum': job.open_for_alum,
-            'cpi_shortlist': job.cpi_shortlist,
-            'minimum_cpi': job.minimum_cpi,
-            'percentage_x': job.percentage_x,
-            'percentage_xii': job.percentage_xii,
-            'num_openings': job.num_openings,
-            'other_requirements': job.other_requirements,
-            'currency': job.currency,
-            'ctc_btech': job.ctc_btech,
-            'ctc_mtech': job.ctc_mtech,
-            'ctc_ma': job.ctc_msc,
-            'ctc_msc': job.ctc_ma,
-            'ctc_phd': job.ctc_phd,
-            'gross_btech': job.gross_btech,
-            'gross_mtech': job.gross_mtech,
-            'gross_ma': job.gross_ma,
-            'gross_msc': job.gross_msc,
-            'gross_phd': job.gross_phd,
-            'take_home_during_training': job.take_home_during_training,
-            'take_home_after_training': job.take_home_after_training,
-            'bonus': job.bonus,
-            'bond': job.bond,
-            'bond_details': job.bond_details,
-            'profile_name': job.profile_name,
-            'prog': job.prog.all(),
-            'dept': job.dept.all(),
-            'current_year': job.current_year.all()
-        })
-        args['job'] = job
+        args = dict(edit_job_form=job_add_form, job=job_instance)
         return render(request, 'jobportal/Company/editjob.html', args)
 
 
@@ -491,3 +375,25 @@ def download_cvs(request, jobid):
     response['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
 
     return response
+
+
+def view_job(request, jobid):
+    job_instance = get_object_or_404(Job, id=jobid)
+    rel_list = ProgrammeJobRelation.objects.filter(job=job_instance)
+    args = dict(job_instance=job_instance, rel_list=rel_list)
+    return render(request, 'jobportal/Company/job.html', args)
+
+
+def add_progs(request, jobid):
+    job_instance = get_object_or_404(Job, id=jobid)
+    formset = JobProgFormSet(request.POST or None, instance=job_instance)
+    if request.method == 'POST':
+        if formset.is_valid():
+            formset.save()
+            return redirect('companyjob', jobid=job_instance.id)
+        else:
+            args = dict(formset=formset, job_instance=job_instance)
+            return render(request, 'jobportal/Company/add_job_progs.html', args)
+    else:
+        args = dict(formset=formset, job_instance=job_instance)
+        return render(request, 'jobportal/Company/add_job_progs.html', args)

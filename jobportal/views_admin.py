@@ -7,11 +7,8 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.contrib.auth.models import User
-from .models import UserProfile, Student, Company, Job, Year, Programme, \
-    Department, Admin, CompanyReg, StudentJobRelation, AlumJobRelation, Alumni
-from .forms import AdminLoginForm, StudentSearchForm, AddStudent, \
-    AddCompany, EditCompany, EditStudentAdmin
-from .forms import AddEditDepartment, AddEditProgramme, AddEditYear, AdminJobEditForm
+from .models import *
+from .forms import *
 
 ADMIN_LOGIN_URL = reverse_lazy('jobportal/admin_login')
 
@@ -262,96 +259,17 @@ def review_job(request, jobid):
 # Edit job
 @login_required(login_url=ADMIN_LOGIN_URL)
 def edit_job(request, jobid):
-    job = get_object_or_404(Job, id=jobid)
+    job_instance = get_object_or_404(Job, id=jobid)
+    job_add_form = AdminJobEditForm(request.POST or None, instance=job_instance)
     if request.method == "POST":
-        job_add_form = AdminJobEditForm(request.POST)
         if job_add_form.is_valid():
-            job.description = job_add_form.cleaned_data['description']
-            job.designation = job_add_form.cleaned_data['designation']
-            job.cpi_shortlist = job_add_form.cleaned_data['cpi_shortlist']
-            job.minimum_cpi = job_add_form.cleaned_data['minimum_cpi']
-            job.percentage_x = job_add_form.cleaned_data['percentage_x']
-            job.percentage_xii = job_add_form.cleaned_data['percentage_xii']
-            job.other_requirements = job_add_form.cleaned_data['other_requirements']
-            job.num_openings = job_add_form.cleaned_data['num_openings']
-            job.currency = job_add_form.cleaned_data['currency']
-            job.ctc_btech = job_add_form.cleaned_data['ctc_btech']
-            job.ctc_mtech = job_add_form.cleaned_data['ctc_mtech']
-            job.ctc_ma = job_add_form.cleaned_data['ctc_ma']
-            job.ctc_msc = job_add_form.cleaned_data['ctc_msc']
-            job.ctc_phd = job_add_form.cleaned_data['ctc_phd']
-            job.gross_btech = job_add_form.cleaned_data['gross_btech']
-            job.gross_mtech = job_add_form.cleaned_data['gross_mtech']
-            job.gross_ma = job_add_form.cleaned_data['gross_ma']
-            job.gross_msc = job_add_form.cleaned_data['gross_msc']
-            job.gross_phd = job_add_form.cleaned_data['gross_phd']
-            job.take_home_during_training = job_add_form.cleaned_data['take_home_during_training']
-            job.take_home_after_training = job_add_form.cleaned_data['take_home_after_training']
-            job.bonus = job_add_form.cleaned_data['bonus']
-            job.bond = job_add_form.cleaned_data['bond']
-            job.bond_details = job_add_form.cleaned_data['bond_details']
-            job.profile_name = job_add_form.cleaned_data['profile_name']
-            job.last_updated = datetime.now()
-            # Dates
-            job.opening_date = job_add_form.cleaned_data['opening_date']
-            job.application_deadline = job_add_form.cleaned_data['application_deadline']
-            # Save
-            job.save()
-
-            # dept_list = job_add_form.cleaned_data['dept']
-            # current_year_list = job_add_form.cleaned_data['current_year']
-            # prog_list = job_add_form.cleaned_data['prog']
-            #
-            # job.dept.clear()
-            # job.current_year.clear()
-            # job.prog.clear()
-            #
-            # for adept in dept_list:
-            #     job.dept.add(adept)
-            # for acurrent_year in current_year_list:
-            #     job.current_year.add(acurrent_year)
-            # for aprog in prog_list:
-            #     job.prog.add(aprog)
-
-            job.save()
+            job_add_form.save()
             return redirect('review_job', jobid=jobid)
         else:
-            print "Not saved"
-            args = {'edit_job_form': job_add_form, 'job': job}
+            args = dict(edit_job_form=job_add_form, job=job_instance)
             return render(request, 'jobportal/Admin/edit_job.html', args)
     else:
-        args = {'edit_job_form': AdminJobEditForm(initial={
-            'description': job.description,
-            'designation': job.designation,
-            'cpi_shortlist': job.cpi_shortlist,
-            'minimum_cpi': job.minimum_cpi,
-            'percentage_x': job.percentage_x,
-            'percentage_xii': job.percentage_xii,
-            'num_openings': job.num_openings,
-            'other_requirements': job.other_requirements,
-            'currency': job.currency,
-            'ctc_btech': job.ctc_btech,
-            'ctc_mtech': job.ctc_mtech,
-            'ctc_ma': job.ctc_msc,
-            'ctc_msc': job.ctc_ma,
-            'ctc_phd': job.ctc_phd,
-            'gross_btech': job.gross_btech,
-            'gross_mtech': job.gross_mtech,
-            'gross_ma': job.gross_ma,
-            'gross_msc': job.gross_msc,
-            'gross_phd': job.gross_phd,
-            'take_home_during_training': job.take_home_during_training,
-            'take_home_after_training': job.take_home_after_training,
-            'bonus': job.bonus,
-            'bond': job.bond,
-            'bond_details': job.bond_details,
-            'profile_name': job.profile_name,
-            'prog': job.prog.all(),
-            'dept': job.dept.all(),
-            'current_year': job.current_year.all(),
-            'opening_date': job.opening_date,
-            'application_deadline': job.application_deadline
-        }), 'job': job}
+        args = dict(edit_job_form=job_add_form, job=job_instance)
         return render(request, 'jobportal/Admin/edit_job.html', args)
 
 
@@ -528,8 +446,6 @@ def edit_company(request, companyid):
     if request.method == "POST":
         # if form is valid
         if edit_company_form.is_valid():
-            # TODO : Convert this to model form
-            # TODO : Use create_instance method instead of line by line adding
             edit_company_form.save()
             return redirect('review_company_profile', companyid=companyid)
         else:
@@ -701,3 +617,18 @@ def admin_approvals(request, object_type):
         return render(request, 'jobportal/Admin/unapprv_place.html', args)
     else:
         return redirect("admin_home")
+
+
+def edit_progs(request, jobid):
+    job_instance = get_object_or_404(Job, id=jobid)
+    formset = JobProgFormSet(request.POST or None, instance=job_instance)
+    if request.method == 'POST':
+        if formset.is_valid():
+            formset.save()
+            return redirect('review_job', jobid=job_instance.id)
+        else:
+            args = dict(formset=formset, job_instance=job_instance)
+            return render(request, 'jobportal/Admin/edit_progs_formset.html', args)
+    else:
+        args = dict(formset=formset, job_instance=job_instance)
+        return render(request, 'jobportal/Admin/edit_progs_formset.html', args)

@@ -4,11 +4,10 @@
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm
+from django.forms import ModelForm, inlineformset_factory
 from functools import partial
-from django.utils import timezone
 # Project imports
-from models import Programme, Department, Year, Student, CompanyReg, Company, Job
+from models import *
 from constants import *
 # Crispy Widget
 from crispy_forms.helper import FormHelper
@@ -19,6 +18,8 @@ from captcha.fields import CaptchaField
 
 # Date Widget
 DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+
+JobProgFormSet = inlineformset_factory(Job, ProgrammeJobRelation, fields=('year', 'dept', 'prog'), extra=2)
 
 
 class StudentLoginForm(forms.Form):
@@ -31,7 +32,7 @@ class EditStudProfileForm(ModelForm):
 
     class Meta:
         model = Student
-        exclude = ['user', 'cv1', 'cv2', 'placed', 'inter2', 'intern3', 'ppo']
+        exclude = ['user', 'avatar', 'signature', 'cv1', 'cv2', 'placed', 'inter2', 'intern3', 'ppo']
 
     def __init__(self, *args, **kwargs):
         super(EditStudProfileForm, self).__init__(*args, **kwargs)
@@ -115,45 +116,12 @@ class EditAlumProfileForm(forms.Form):
     linkedin_link = forms.EmailField(max_length=254, required=False, label='LinkedIn')
 
 
-class JobEditForm(forms.Form):
-    description = forms.CharField(label="Description", widget=forms.Textarea, required=True)
-    designation = forms.CharField(label="Job Designation", max_length=30, required=True)
-    # Is Job open for Alum
-    open_for_alum = forms.BooleanField(initial=True, required=True, label="Open for Alumni")
-    # Are there any CPI requirements
-    cpi_shortlist = forms.BooleanField(initial=False, required=False)
-    minimum_cpi = forms.DecimalField(decimal_places=2, max_digits=4, initial=06.00, required=True)
-    percentage_x = forms.DecimalField(decimal_places=2, max_digits=5, initial=70.00, required=True)
-    percentage_xii = forms.DecimalField(decimal_places=2, max_digits=5, initial=70.00, required=True)
-    num_openings = forms.DecimalField(label="Openings", required=True)
-    other_requirements = forms.CharField(label="Other requirements", widget=forms.Textarea, max_length=140,
-                                         required=False)
-    # salary information
-    currency = forms.CharField(max_length=15, initial="INR")
-    ctc_btech = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    ctc_mtech = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    ctc_msc = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    ctc_ma = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    ctc_phd = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    gross_btech = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    gross_mtech = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    gross_msc = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    gross_ma = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    gross_phd = forms.DecimalField(max_digits=12, decimal_places=2, initial=10000)
-    take_home_during_training = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=10000)
-    take_home_after_training = forms.DecimalField(max_digits=12, decimal_places=2, required=False, initial=10000)
-    bonus = forms.DecimalField(max_digits=12, decimal_places=2, label="Bonus/Perks/Incentives", required=False)
-    bond = forms.BooleanField(required=True, initial=False)
-    bond_details = forms.CharField(widget=forms.Textarea, required=False, max_length=200)
-    profile_name = forms.CharField(max_length=25, required=True)
-    prog = forms.ModelMultipleChoiceField(queryset=Programme.objects.all(), widget=forms.CheckboxSelectMultiple,
-                                          required=True, label='Programmes')
-    dept = forms.ModelMultipleChoiceField(queryset=Department.objects.all(), widget=forms.CheckboxSelectMultiple,
-                                          required=True, label='Departments')
-
-    # current year is not required for Job
-    # current_year = forms.ModelMultipleChoiceField(queryset=Year.objects.all(), widget=forms.CheckboxSelectMultiple,
-    #                                               required=True, label='Audience')
+class JobEditForm(ModelForm):
+    class Meta:
+        model = Job
+        exclude = ['alum_owner', 'company_owner', 'posted_by_alumnus', 'posted_by_company',
+                   'posted_on', 'approved', 'approved_on', 'sent_back', 'last_updated', 'opening_date',
+                   'application_deadline']
 
     def __init__(self, *args, **kwargs):
         """
@@ -205,23 +173,21 @@ class JobEditForm(forms.Form):
                     'Bond',
                     'bond',
                     'bond_details'
-                ),
-                Tab(
-                    'Open For',
-                    'prog',
-                    'dept',
-                    'current_year'
                 )
             )
         )
 
 
-class AdminJobEditForm(JobEditForm):
-    opening_date = forms.DateField(label="Opening Date", required=True, widget=DateInput())
-    application_deadline = forms.DateField(label="Application Deadline", required=True, widget=DateInput())
+class AdminJobEditForm(ModelForm):
+    class Meta:
+        model = Job
+        exclude = ['alum_owner', 'company_owner', 'posted_by_alumnus', 'posted_by_company',
+                   'posted_on', 'approved_on', 'last_updated']
 
     def __init__(self, *args, **kwargs):
         super(AdminJobEditForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             TabHolder(
                 Tab(
@@ -261,12 +227,6 @@ class AdminJobEditForm(JobEditForm):
                     'Bond',
                     'bond',
                     'bond_details'
-                ),
-                Tab(
-                    'Open For',
-                    'prog',
-                    'dept',
-                    'current_year'
                 ),
                 Tab(
                     'Date Settings',
@@ -394,7 +354,7 @@ class AddStudent(ModelForm):
 
     class Meta:
         model = Student
-        exclude = ['user', 'placed', 'cv1', 'cv2', 'intern2', 'intern3', 'ppo']
+        exclude = ['user', 'avatar', 'signature', 'placed', 'cv1', 'cv2', 'intern2', 'intern3', 'ppo']
 
 
 class AddCompany(ModelForm):
@@ -489,7 +449,7 @@ class EditStudentAdmin(ModelForm):
 
     class Meta:
         model = Student
-        exclude = ['username', 'password']
+        exclude = ['username', 'password', 'avatar', 'signature']
 
 
 class AddEditDepartment(ModelForm):
@@ -546,3 +506,11 @@ class StudCVForm(forms.Form):
         form_data = self.cleaned_data
         if not bool(form_data['cv1']) and not bool(form_data['cv2']):
             raise ValidationError("Provide at least one file.")
+
+
+class AvatarSignForm(ModelForm):
+    class Meta:
+        model = Student
+        fields = ['avatar', 'signature']
+
+

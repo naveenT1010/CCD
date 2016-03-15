@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'versatileimagefield',
     'crispy_forms',
     'smart_selects',
     'captcha',
@@ -112,9 +113,9 @@ STATICFILES_DIRS = (
 )
 
 # Media Files (Uploaded files)
-MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
 
 # File Upload Handlers
 FILE_UPLOAD_HANDLERS = (

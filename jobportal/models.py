@@ -6,6 +6,8 @@ from constants import *
 
 from smart_selects.db_fields import ChainedForeignKey
 
+from versatileimagefield.fields import VersatileImageField
+
 
 def generate_cv1filename(instance, filename):
     url = "cv1/%s" % str(instance.roll_no)
@@ -14,6 +16,16 @@ def generate_cv1filename(instance, filename):
 
 def generate_cv2filename(instance, filename):
     url = "cv2/%s" % str(instance.roll_no)
+    return url
+
+
+def generate_profilepic_name(instance, filename):
+    url = "avatar/%s" % str(instance.roll_no)
+    return url
+
+
+def generate_signature_name(instance, filename):
+    url = "signature/%s" % str(instance.roll_no)
     return url
 
 
@@ -27,11 +39,11 @@ class Year(models.Model):
 class Department(models.Model):
     year = models.ForeignKey(Year)
     dept = models.CharField(max_length=40)
-    dept_code = models.CharField(max_length=4, unique=True)
+    dept_code = models.CharField(max_length=4)
     dept_minor_status = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = ['dept', 'year']
+        unique_together = ['dept_code', 'year']
 
     def __unicode__(self):
         return str(self.dept_code)
@@ -41,6 +53,9 @@ class Programme(models.Model):
     year = models.ForeignKey(Year)
     dept = ChainedForeignKey(Department, chained_field="year", chained_model_field="year", show_all=False)
     name = models.CharField(choices=PROGRAMMES, max_length=10)
+
+    class Meta:
+        unique_together = ['year', 'dept', 'name']
 
     def __unicode__(self):
         return str(self.name)
@@ -128,6 +143,8 @@ class Alumni(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(UserProfile, blank=True, null=True)
+    avatar = VersatileImageField(upload_to=generate_profilepic_name, blank=True, default='media/avatar/sample_avatar.png')
+    signature = VersatileImageField(upload_to=generate_signature_name, blank=True, default='media/avatar/sample_sign.png')
     roll_no = models.DecimalField(max_digits=10, decimal_places=0, unique=True, verbose_name="Roll No", default=0)
     first_name = models.CharField(max_length=20, blank=True, default="")
     middle_name = models.CharField(max_length=20, blank=True, default="")
@@ -198,19 +215,16 @@ class Job(models.Model):
     # Posted by who
     alum_owner = models.ForeignKey(Alumni, blank=True, null=True, related_name="owner")
     company_owner = models.ForeignKey(Company, blank=True, null=True)
-    posted_by_alumnus = models.BooleanField(default=False, verbose_name="Posted by Alum")
-    posted_by_company = models.BooleanField(default=False, verbose_name="Posted by Company")
-    # Open For
-    open_for_alum = models.BooleanField(default=False, verbose_name="Open For Alumni")
-    open_for_studs = models.BooleanField(default=True)
+    posted_by_alumnus = models.NullBooleanField(default=None, verbose_name="Posted by Alum")
+    posted_by_company = models.NullBooleanField(default=None, verbose_name="Posted by Company")
     # Fields Needed
     description = models.TextField(blank=True, verbose_name="Job Description", null=True)
     designation = models.CharField(blank=True, max_length=50, null=True, verbose_name="Job Title/Designation")
-    cpi_shortlist = models.BooleanField(default=False, choices=BOOL_CHOICES)
+    cpi_shortlist = models.BooleanField(default=False)
     minimum_cpi = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00)
     percentage_x = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True)
     percentage_xii = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True)
-    num_openings = models.DecimalField(max_digits=3, decimal_places=0, null=True)
+    num_openings = models.DecimalField(max_digits=3, decimal_places=0, null=True, default=20)
     other_requirements = models.TextField(default="", max_length=100, null=True)
     # Salary
     currency = models.CharField(default="INR", max_length=15, null=True)
@@ -229,7 +243,7 @@ class Job(models.Model):
     bonus = models.DecimalField(max_digits=12, decimal_places=2, default=0.00, verbose_name="Bonus/Perks/Incentives",
                                 null=True)
     # Job description
-    bond = models.NullBooleanField(default=False, choices=BOOL_CHOICES, null=True)
+    bond = models.NullBooleanField(default=None)
     bond_details = models.TextField(blank=True, null=True, max_length=200)
     profile_name = models.CharField(max_length=15, default="profile_name")
     # Dates and Status
@@ -239,13 +253,6 @@ class Job(models.Model):
     sent_back = models.BooleanField(default=False)
     # application_deadline = models.DateField(null = True, blank = True)
     last_updated = models.DateTimeField(null=True, blank=True)
-    # Audience
-    prog = models.ManyToManyField(Programme)
-    dept = models.ManyToManyField(Department)
-    current_year = models.ManyToManyField(Year)
-    # ManyToMany
-    students = models.ManyToManyField(Student, blank=True, through="StudentJobRelation")
-    alums = models.ManyToManyField(Alumni, blank=True, through="AlumJobRelation")
     # Dates
     opening_date = models.DateField(blank=True, null=True, default=datetime.strptime('01012017', '%d%m%Y').date())
     application_deadline = models.DateField(blank=True, null=True, default=datetime.strptime('01012017', '%d%m%Y').date())
@@ -255,7 +262,17 @@ class Job(models.Model):
         verbose_name_plural = "Jobs"
 
     def __unicode__(self):
-        return str(self.description)
+        return str(self.designation)
+
+
+class ProgrammeJobRelation(models.Model):
+    job = models.ForeignKey(Job)
+    year = models.ForeignKey(Year, null=True)
+    dept = ChainedForeignKey(Department, chained_field='year', chained_model_field='year', show_all=False, null=True)
+    prog = ChainedForeignKey(Programme, chained_field='dept', chained_model_field='dept', show_all=False, null=True)
+
+    def __unicode__(self):
+        return str(self.job + self.prog)
 
 
 class StudentJobRelation(models.Model):

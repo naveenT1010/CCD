@@ -2,92 +2,64 @@
 {% load crispy_forms_tags %}
 
 {% block account_setting%}
-    <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
-    <p><a href="#" title="">My Account</a></p>
+<p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
+<p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
 {% block menu %}
 <li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-    <li><a href="{% url 'admin_home' %}">Home</a></li>
-    <li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
-    <li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
-    <li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-        <li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
-    <li><a href="{% url 'departments' %}">Departments</a></li>
-    <li><a href="{% url 'programmes' %}">Programmes</a></li>
-    <li><a href="{% url 'years' %}">Years</a></li>
-    <li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
+<li><a href="{% url 'admin_home' %}">Home</a></li>
+<li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
+<li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
+<li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
+<li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
+<li><a href="{% url 'departments' %}">Departments</a></li>
+<li><a href="{% url 'programmes' %}">Programmes</a></li>
+<li><a href="{% url 'years' %}">Years</a></li>
+<li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
 {% endblock %}
 
-
 {% block content %}
-    <div class="row">
-        <h2 class="sub-header">Job Info</h2>
-        <div class="col-md-9">
 
-            <p>Description : <mark>{{ job_instance.description }}</mark></p>
+<h2 class="sub-header">Job Info</h2>
+<div class="col-md-9">
+    <!--TODO: Represent this data properly -->
+    <!--TODO: Do something with this mess -->
+    <p>Description :
+        <mark>{{ job_instance.description }}</mark>
+    </p>
 
-            <p>Designation : <mark>{{ job_instance.designation }}</mark></p>
+    <p>Designation :
+        <mark>{{ job_instance.designation }}</mark>
+    </p>
 
-            <p>CPI Shortlist : {{ job_instance.cpi_shortlist }}</p>
+    <p>CPI Shortlist : {{ job_instance.cpi_shortlist }}</p>
 
-            <p>Minimum CPI: {{ job_instance.minimum_cpi }}</p>
+    <p>Minimum CPI: {{ job_instance.minimum_cpi }}</p>
 
-            <p>Percentage X : {{ job_instance.percentage_x }}</p>
+    <p>Percentage X : {{ job_instance.percentage_x }}</p>
 
-            <p>Percentage XII : {{ job_instance.percentage_xii }}</p>
+    <p>Percentage XII : {{ job_instance.percentage_xii }}</p>
 
-            <p>Openings: {{ job_instance.num_openings }}</p>
+    <p>Openings: {{ job_instance.num_openings }}</p>
 
-            <p>Programmes:</p>
+    <h4><a href="{% url 'edit_progs' job_instance.id %}">Add Progs</a></h4>
+</div>
 
-                {% for aprog in job_instance.prog.all %}
-                    {{ aprog }}
-                {% endfor %}
+<div class="col-md-9">
+    <h3>Applicants Data</h3>
 
-            <p>Departments</p>
+    <h4><a href="{% url 'job_candidates' job_instance.id %}">Applicants' List</a></h4>
 
-                {% for adept in  job_instance.dept.all %}
-                    {{ adept }}
-                {% endfor %}
+    <h4><a href="{% url 'job_candidates' job_instance.id %}">Download Applicants' Data</a></h4>
+</div>
 
-            <p>Years:</p>
+<div class="col-md-9">
+    <h3>Edit and Delete</h3>
 
-                {% for ayear in  job_instance.current_year.all %}
-                    {{ ayear }}
-                {% endfor %}
+    <h4><a href="{% url 'edit_job' job_instance.id %}">Edit</a></h4>
 
-        </div>
-
-        <div class="col-md-9">
-            <h3>Applicants Data</h3>
-
-            <h4><a href="{% url 'job_candidates' job_instance.id %}">Applicants' List</a></h4>
-
-            <h4><a href="{% url 'job_candidates' job_instance.id %}">Download Applicants' Data</a></h4>
-        </div>
-
-        <div class="col-md-9">
-            <h3>Edit and Delete</h3>
-
-            <h4><a href="{% url 'edit_job' job_instance.id %}">Edit</a></h4>
-
-            <h4><a href="{% url 'delete_job' job_instance.id %}">Delete</a></h4>
-        </div>
-    </div>
-
-
-    <div class="row">
-        <h2 class="sub-header">Links</h2>
-        <div class="col-md-9">
-
-            <h4><a href="{% url 'admin_logout' %}"> Logout</a></h4>
-
-            <h4><a href="{% url 'admin_home' %}"> Home</a></h4>
-
-            <h4><a href="{% url 'jobs' %}">Jobs/Internships</a></h4>
-
-        </div>
-    </div>
+    <h4><a href="{% url 'delete_job' job_instance.id %}">Delete</a></h4>
+</div>
 
 {% endblock %}
