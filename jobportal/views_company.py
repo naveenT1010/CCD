@@ -317,6 +317,29 @@ def job_unplace(request, relationid):
     return redirect("jobaction", jobid=relation_instance.job.id, studid=relation_instance.stud.id)
 
 
+@login_required(login_url=COMPANY_LOGIN_URL)
+def job_drop(request, jobid):
+    job_instance = get_object_or_404(Job, id=jobid)
+    stud_rels = list(StudentJobRelation.objects.get(job=job_instance))
+    error = False
+    for rel in stud_rels:
+        if rel.shortlist_init is True and rel.shortlist_approved is not True:
+            error = True
+            break
+        if rel.placed_init is True and rel.placed_approved is not True:
+            error = True
+            break
+    if not error:
+        for rel in stud_rels:
+            rel.round += 1
+            if rel.shortlist_init is False:
+                rel.dropped = True
+            rel.save()
+    # TODO: Message framework
+    # TODO: change to render
+    return redirect('companycandidates', jobid=job_instance.id)
+
+
 # Alum Job Relation Views
 @login_required(login_url=COMPANY_LOGIN_URL)
 def job_alum_relation(request, jobid, alumid):

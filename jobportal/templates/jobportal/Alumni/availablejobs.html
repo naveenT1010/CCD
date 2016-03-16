@@ -6,41 +6,44 @@
 <li><a href="{% url 'availablejobs' %}"><span class="glyphicon glyphicon-briefcase"></span> Jobs/Internship</a></li>
 <li><a href="{% url 'alum_jobsappliedfor' %}" title=""><span class="glyphicon glyphicon-ok"></span> Jobs applied for</a>
 </li>
-<li><a href="{% url 'postalumjob' %}" title="Post a new job"><span class="glyphicon glyphicon-plus"></span> Post a new Job</a></li>
+<li><a href="{% url 'postalumjob' %}" title="Post a new job"><span class="glyphicon glyphicon-plus"></span> Post a new
+    Job</a></li>
 <li><a href="{% url 'viewalumjob' %}" title="View posted jobs">View posted jobs</a></li>
-<li><a href="{% url 'mentormentee:add_proposal' %}" title="Add a new proposal"><span class="glyphicon glyphicon-plus"></span> Add new research proposal</a></li>
+<li><a href="{% url 'mentormentee:add_proposal' %}" title="Add a new proposal"><span
+        class="glyphicon glyphicon-plus"></span> Add new research proposal</a></li>
 <li><a href="{% url 'mentormentee:alum_proposals' %}" title="View all proposals">View proposals</a></li>
 <li><a href="{% url 'alum_logout' %}" title="alum_logout">Logout</a></li>
 {% endblock %}
 
 {% block content %}
-	<h2 class="sub-header">Jobs/Internships Open For Alumni</h2>
-        <div class="col-md-9">
-			<table class="table table-bordered table-striped">
-				<thead>
-					<tr>
-						<th>Designation</th>
-						<th>Openings</th>
-						<th>Profile</th>
-						<th>Posted on</th>
-						<th>Last Updated</th>
-                        <th>Details</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for job in job_list %}
-						<tr>
-							<td>{{ job.designation }}</td>
-							<td>{{ job.num_openings }}</td>
-							<td>{{ job.profile_name }}</td>
-							<td>{{ job.posted_on }}</td>
-							<td>{{ job.last_updated }}</td>
-                            <td><a class="btn btn-xs btn-info" href="{% url 'alum_jobdetails' job.id %}">Details</a></td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			<br>
-		</div>
-	<br>
+<h2 class="sub-header">Jobs/Internships Open For Alumni</h2>
+<hr>
+<div class="col-md-9">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Designation</th>
+            <th>Openings</th>
+            <th>Profile</th>
+            <th>Posted on</th>
+            <th>Last Updated</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for job in job_list %}
+        <tr>
+            <td>{{ job.designation }}</td>
+            <td>{{ job.num_openings }}</td>
+            <td>{{ job.profile_name }}</td>
+            <td>{{ job.posted_on }}</td>
+            <td>{{ job.last_updated }}</td>
+            <td><a class="btn btn-xs btn-info" href="{% url 'alum_jobdetails' job.id %}">Details</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+</div>
+<br>
 {% endblock %}
