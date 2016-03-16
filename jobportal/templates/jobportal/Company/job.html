@@ -20,12 +20,30 @@
 <h2 class="sub-header">Jobs Details:</h2>
 <hr/>
 <div class="col-md-12">
-    <p>{{job_instance.description}}</p>
-    <p><a href="{% url 'company_add_progs' job_instance.id %}">Add Programmes</a></p>
-
-    {% for prog in rel_list %}
-        <p>{{prog.prog}} {{prog.dept}} {{prog.year}}</p>
-    {% endfor %}
+    <p>Description: {{job_instance.description}}</p>
+    <p>Designation: {{job_instance.designation}}</p>
+    <br>
+    <h4>Programmes</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Dept</th>
+                <th>Prog</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prog in rel_list %}
+                <tr>
+                    <td>{{prog.year}}</td>
+                    <td>{{prog.dept}}</td>
+                    <td>{{prog.prog}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="{% url 'company_add_progs' job_instance.id %}" class="btn btn-primary">Add Programmes</a></p>
+    <p><a href="{% url 'companycandidates' job_instance.id %}" class="btn btn-primary">View Candidates</a></p>
 </div>
 
 {% endblock %}

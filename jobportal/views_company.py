@@ -195,6 +195,40 @@ def company_add_job(request):
         return render(request, 'jobportal/Company/postjob.html', dict(add_job_form=add_job_form))
 
 
+def view_job(request, jobid):
+    """
+    View for Company/Recruiters to view(reviw) an already posted job
+    :param request: HttpRequest instance
+    :param jobid: Job instance id
+    :return: HttpResponse instance
+    """
+    job_instance = get_object_or_404(Job, id=jobid)
+    rel_list = ProgrammeJobRelation.objects.filter(job=job_instance)
+    args = dict(job_instance=job_instance, rel_list=rel_list)
+    return render(request, 'jobportal/Company/job.html', args)
+
+
+def add_progs(request, jobid):
+    """
+    View for Company to add programmes to an already posted job.
+    :param request: HttpRequest instance
+    :param jobid: Job instance id
+    :return: HttpResponse instance
+    """
+    job_instance = get_object_or_404(Job, id=jobid)
+    formset = JobProgFormSet(request.POST or None, instance=job_instance)
+    if request.method == 'POST':
+        if formset.is_valid():
+            formset.save()
+            return redirect('companyjob', jobid=job_instance.id)
+        else:
+            args = dict(formset=formset, job_instance=job_instance)
+            return render(request, 'jobportal/Company/add_job_progs.html', args)
+    else:
+        args = dict(formset=formset, job_instance=job_instance)
+        return render(request, 'jobportal/Company/add_job_progs.html', args)
+
+
 # Edit an already posted job/internship
 @login_required(login_url=COMPANY_LOGIN_URL)
 def company_edit_job(request, jobid):
@@ -223,28 +257,14 @@ def company_del_job(request, jobid):
     return redirect('companyviewjobs')
 
 
-# Events and status
-@login_required(login_url=COMPANY_LOGIN_URL)
-def company_eventsandstatus(request):
-    company_instance = get_object_or_404(Company, id=request.session['company_instance_id'])
-    args = {'event_list': Event.objects.filter(company_owner=company_instance)}
-    return render(request, 'jobportal/Company/eventsandstatus.html', args)
-
-
 # Candidates for a job; both alumns and students
 @login_required(login_url=COMPANY_LOGIN_URL)
 def company_candidates(request, jobid):
-    job = get_object_or_404(Job, id=jobid)
-    stud_list = job.students.all()
-    alum_list = job.alums.all()
+    job_instance = get_object_or_404(Job, id=jobid)
+    stud_list = [e.stud for e in StudentJobRelation.objects.filter(job=job_instance)]
     # Magic
-    hide_jobaction = True if job.application_deadline > datetime.now().date() else False
-    args = {
-        'jobid': job.id,
-        'stud_list': stud_list,
-        'alum_list': alum_list,
-        'hide_jobaction': hide_jobaction
-    }
+    hide_jobaction = True if job_instance.application_deadline > datetime.now().date() else False
+    args = dict(jobid=job_instance.id, stud_list=stud_list, hide_jobaction=hide_jobaction)
     return render(request, 'jobportal/Company/candidates.html', args)
 
 
@@ -254,7 +274,7 @@ def job_stud_relation(request, jobid, studid):
     stud_instance = get_object_or_404(Student, id=studid)
     job_instance = get_object_or_404(Job, id=jobid)
     relation_instance = get_object_or_404(StudentJobRelation, stud=stud_instance, job=job_instance)
-    args = {'stud_instance': stud_instance, 'job_instance': job_instance, 'relation_instance': relation_instance}
+    args = dict(stud_instance=stud_instance, job_instance=job_instance, relation_instance=relation_instance)
     return render(request, 'jobportal/Company/jobactions.html', args)
 
 
@@ -262,7 +282,7 @@ def job_stud_relation(request, jobid, studid):
 @login_required(login_url=COMPANY_LOGIN_URL)
 def job_shortlist(request, relationid):
     relation_instance = get_object_or_404(StudentJobRelation, id=relationid)
-    relation_instance.shortlist_status = True
+    relation_instance.shortlist_init = True
     relation_instance.save()
     return redirect("jobaction", jobid=relation_instance.job.id, studid=relation_instance.stud.id)
 
@@ -271,7 +291,7 @@ def job_shortlist(request, relationid):
 @login_required(login_url=COMPANY_LOGIN_URL)
 def job_unshortlist(request, relationid):
     relation_instance = get_object_or_404(StudentJobRelation, id=relationid)
-    relation_instance.shortlist_status = False
+    relation_instance.shortlist_init = False
     relation_instance.save()
     return redirect("jobaction", jobid=relation_instance.job.id, studid=relation_instance.stud.id)
 
@@ -346,7 +366,7 @@ def job_unplace2(request, relationid):
 # Issue: Not working as intended; Most probably it's not using relative path
 # SO solution isn't working
 # TODO: Debug; Think of some workaround
-# Download CVs as zip
+# TODO: Download CVs as zip
 @login_required(login_url=COMPANY_LOGIN_URL)
 def download_cvs(request, jobid):
     job_instance = get_object_or_404(Job, id=jobid)
@@ -377,23 +397,10 @@ def download_cvs(request, jobid):
     return response
 
 
-def view_job(request, jobid):
-    job_instance = get_object_or_404(Job, id=jobid)
-    rel_list = ProgrammeJobRelation.objects.filter(job=job_instance)
-    args = dict(job_instance=job_instance, rel_list=rel_list)
-    return render(request, 'jobportal/Company/job.html', args)
+# Events and status
+@login_required(login_url=COMPANY_LOGIN_URL)
+def company_eventsandstatus(request):
+    company_instance = get_object_or_404(Company, id=request.session['company_instance_id'])
+    args = {'event_list': Event.objects.filter(company_owner=company_instance)}
+    return render(request, 'jobportal/Company/eventsandstatus.html', args)
 
-
-def add_progs(request, jobid):
-    job_instance = get_object_or_404(Job, id=jobid)
-    formset = JobProgFormSet(request.POST or None, instance=job_instance)
-    if request.method == 'POST':
-        if formset.is_valid():
-            formset.save()
-            return redirect('companyjob', jobid=job_instance.id)
-        else:
-            args = dict(formset=formset, job_instance=job_instance)
-            return render(request, 'jobportal/Company/add_job_progs.html', args)
-    else:
-        args = dict(formset=formset, job_instance=job_instance)
-        return render(request, 'jobportal/Company/add_job_progs.html', args)

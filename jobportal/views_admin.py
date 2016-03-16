@@ -252,7 +252,8 @@ def jobs(request):
 @login_required(login_url=ADMIN_LOGIN_URL)
 def review_job(request, jobid):
     job_instance = get_object_or_404(Job, id=jobid)
-    args = {'job_instance': job_instance}
+    progs_list = ProgrammeJobRelation.objects.filter(job=job_instance)
+    args = dict(job_instance=job_instance, progs_list=progs_list)
     return render(request, 'jobportal/Admin/review_job.html', args)
 
 
@@ -271,6 +272,22 @@ def edit_job(request, jobid):
     else:
         args = dict(edit_job_form=job_add_form, job=job_instance)
         return render(request, 'jobportal/Admin/edit_job.html', args)
+
+
+# Add programmes to Job
+def edit_progs(request, jobid):
+    job_instance = get_object_or_404(Job, id=jobid)
+    formset = JobProgFormSet(request.POST or None, instance=job_instance)
+    if request.method == 'POST':
+        if formset.is_valid():
+            formset.save()
+            return redirect('review_job', jobid=job_instance.id)
+        else:
+            args = dict(formset=formset, job_instance=job_instance)
+            return render(request, 'jobportal/Admin/edit_progs_formset.html', args)
+    else:
+        args = dict(formset=formset, job_instance=job_instance)
+        return render(request, 'jobportal/Admin/edit_progs_formset.html', args)
 
 
 # Delete job
@@ -542,6 +559,20 @@ def stud_relation(request, jobid, studid):
     return render(request, "jobportal/Admin/review_job_relation.html", args)
 
 
+@login_required(login_url=ADMIN_LOGIN_URL)
+def approve_stud_relation(request, relationid):
+    relation_instance = get_object_or_404(StudentJobRelation, id=relationid)
+    if relation_instance.placed_init is True:
+        if relation_instance.placed_approved is not True:
+            relation_instance.placed_approved = True
+            relation_instance.save()
+    if relation_instance.shortlist_init is True:
+        if relation_instance.shortlist_approved is not True:
+            relation_instance.shortlist_approved = True
+            relation_instance.save()
+    return redirect("approve_action", applicant_type="stud", relationid=relationid)
+
+
 # Alumni job relation
 @login_required(login_url=ADMIN_LOGIN_URL)
 def alum_relation(request, jobid, alumid):
@@ -550,20 +581,6 @@ def alum_relation(request, jobid, alumid):
     relation_instance = get_object_or_404(AlumJobRelation, alum=alum_instance, job=job_instance)
     args = {'relation_instance': relation_instance, 'alum_instance': alum_instance, 'job_instance': job_instance}
     return render(request, "jobportal/Admin/review_job_relation.html", args)
-
-
-@login_required(login_url=ADMIN_LOGIN_URL)
-def approve_stud_relation(request, relationid):
-    relation_instance = get_object_or_404(StudentJobRelation, id=relationid)
-    if relation_instance.placed_init is True:
-        if relation_instance.placed_approved is not True:
-            relation_instance.placed_approved = True
-            relation_instance.save()
-    if relation_instance.ppo_init is True and relation_instance.ppo_accepted is True:
-        if relation_instance.ppo_approved is not True:
-            relation_instance.ppo_approved = True
-            relation_instance.save()
-    return redirect("approve_action", applicant_type="stud", relationid=relationid)
 
 
 @login_required(login_url=ADMIN_LOGIN_URL)
@@ -580,12 +597,7 @@ def approve_alum_relation(request, relationid):
 def job_candidates(request, jobid):
     job_instance = get_object_or_404(Job, id=jobid)
     relation_list_stud = StudentJobRelation.objects.all().filter(job=job_instance)
-    relation_list_alum = AlumJobRelation.objects.all().filter(job=job_instance)
-    args = {
-        'relation_list_alum': relation_list_alum,
-        'relation_list_stud': relation_list_stud,
-        'job_instance': job_instance
-    }
+    args = dict(relation_list_stud=relation_list_stud, job_instance=job_instance)
     return render(request, 'jobportal/Admin/job_candidates.html', args)
 
 
@@ -619,16 +631,4 @@ def admin_approvals(request, object_type):
         return redirect("admin_home")
 
 
-def edit_progs(request, jobid):
-    job_instance = get_object_or_404(Job, id=jobid)
-    formset = JobProgFormSet(request.POST or None, instance=job_instance)
-    if request.method == 'POST':
-        if formset.is_valid():
-            formset.save()
-            return redirect('review_job', jobid=job_instance.id)
-        else:
-            args = dict(formset=formset, job_instance=job_instance)
-            return render(request, 'jobportal/Admin/edit_progs_formset.html', args)
-    else:
-        args = dict(formset=formset, job_instance=job_instance)
-        return render(request, 'jobportal/Admin/edit_progs_formset.html', args)
+

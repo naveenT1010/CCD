@@ -30,21 +30,18 @@
             <table id="job-table" class="table table-bordered table-striped tablesorter table-hover">
                 <thead>
                     <tr>
-                        <th>Job Id</th>
                         <th>Posted By</th>
                         <th>Job Designation</th>
                         <th>Openings</th>
-                        <th>Posted On</th>
-                        <th>Last Updated</th>
-                        <th>Approved</th>
-                        <th>Sent Back</th>
+                        <th>Opening Date</th>
+                        <th>Closing Date</th>
+                        <th>Status</th>
                         <th>Details</th>
                     </tr>
                 </thead>
                 <tbody class="searchable">
                     {% for job in  jobs %}
                         <tr>
-                            <td>{{ job.id }}</td>
                             <td>
                                 {% if job.posted_by_company == True %}
                                     {{ job.company_owner }}
@@ -54,11 +51,22 @@
                             </td>
                             <td>{{ job.designation }}</td>
                             <td>{{ job.num_openings }}</td>
-                            <td>{{ job.posted_on }}</td>
-                            <td>{{ job.last_updated }}</td>
-                            <td>{{ job.approved  | yesno:"Yes,No"}}</td>
-                            <td>{{ job.sent_back  | yesno:"Yes,No"}}</td>
-                            <td><a href = "{% url 'review_job' job.id|urlencode %}">Details</a></td>
+                            <td>{{ job.opening_date }}</td>
+                            <td>
+                                {% if job.closing_date %}
+                                    {{ job.closing_date }}
+                                {% else %}
+                                    Date Not Set
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if job.approved %}
+                                    Approved
+                                {% else %}
+                                    Approval Pending
+                                {% endif %}
+                            </td>
+                            <td><a href = "{% url 'review_job' job.id|urlencode %}" class="btn btn-xs btn-primary">Details</a></td>
                         </tr>
                     {% endfor %}
 

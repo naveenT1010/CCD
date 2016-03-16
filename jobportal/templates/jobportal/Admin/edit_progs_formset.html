@@ -2,38 +2,66 @@
 {% load staticfiles %}
 
 {% block head_extra %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="{% static 'smart-selects/admin/js/chainedfk.js' %}"></script>
+
+
 {% endblock %}
 
 {% block account_setting%}
-    <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
-    <p><a href="#" title="">My Account</a></p>
+<p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
+<p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
 {% block menu %}
 <li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-    <li><a href="{% url 'admin_home' %}">Home</a></li>
-    <li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
-    <li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
-    <li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-        <li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
-    <li><a href="{% url 'departments' %}">Departments</a></li>
-    <li><a href="{% url 'programmes' %}">Programmes</a></li>
-    <li><a href="{% url 'years' %}">Years</a></li>
-    <li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
+<li><a href="{% url 'admin_home' %}">Home</a></li>
+<li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
+<li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
+<li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
+<li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
+<li><a href="{% url 'departments' %}">Departments</a></li>
+<li><a href="{% url 'programmes' %}">Programmes</a></li>
+<li><a href="{% url 'years' %}">Years</a></li>
+<li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
 {% endblock %}
 
 {% block content %}
-        <h2 class="sub-header">All Jobs and Internships</h2>
-        <hr>
-        <div class="col-md-12">
-            <!--TODO: Style this form-->
-            <form id='myForm' action="{% url 'company_add_progs' job_instance.id %}" method="post" accept-charset="utf-8">
-                {% csrf_token %}
-                {{ formset.management_form }}
-                {{formset}}
-                <input type="submit" class="btn btn-primary" value="Save">
-            </form>
-        </div>
+<h2 class="sub-header">All Jobs and Internships</h2>
+<hr>
+<div class="col-md-12">
+    <!--TODO: Style this form-->
+    <form id='myForm' action="{% url 'edit_progs' job_instance.id %}" method="post" accept-charset="utf-8">
+        <table>
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <tbody>
+            {% for form in formset %}
+            <tr>
+                <td>
+                    {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                </td>
+                {% for hidden in form.hidden_fields %}
+                <td>{{hidden}}</td>
+                {% endfor %}
+                {% for field in form.visible_fields%}
+                <td>{{field}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-primary" value="Save">
+    </form>
+</div>
 {% endblock %}
+{% block extra_scripts%}
+<script src="{% static 'smart-selects/admin/js/chainedfk.js' %}"></script>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+        $(function() {
+            $('#myForm tbody tr').formset();
+        })
+
+
+</script>
+{% endblock %}
+
