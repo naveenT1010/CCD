@@ -36,6 +36,11 @@ class Year(models.Model):
         return str(self.current_year)
 
 
+class GlobalAdminSettings(models.Model):
+    CV_deadline = models.DateField(null=True)
+    profile_deadline = models.DateField(null=True)
+
+
 class Department(models.Model):
     year = models.ForeignKey(Year)
     dept = models.CharField(max_length=40)
@@ -272,25 +277,19 @@ class ProgrammeJobRelation(models.Model):
     prog = ChainedForeignKey(Programme, chained_field='dept', chained_model_field='dept', show_all=False, null=True)
 
     def __unicode__(self):
-        return str(self.job + self.prog)
+        return str(self.job)
 
 
 class StudentJobRelation(models.Model):
     # status variables
-    # placement process initiated by company/alumni
+    # placement process initiated by company
+    round = models.IntegerField(default=1)
     placed_init = models.BooleanField(default=False)
-    # placement approved by admin
+    shortlist_init = models.BooleanField(default=False)
+    shortlist_approved = models.NullBooleanField(default=None)
     placed_approved = models.NullBooleanField(default=None)
-    # shorlisting status
-    shortlist_status = models.BooleanField(default=False)
-    # ppo process initiated by company
-    ppo_init = models.BooleanField(default=False)
-    # ppo request approved by company/alumni
-    ppo_approved = models.NullBooleanField(default=None)
-    # ppo request approved by admin and accepted by student
-    ppo_accepted = models.NullBooleanField(default=None)
-    # CV to be attached with this job application
-    cv_field = models.FilePathField(null=True, blank=True)
+    dropped = models.BooleanField(default=False)
+    # cv
     cv1 = models.BooleanField(default=False)
     cv2 = models.BooleanField(default=False)
     # Foreign Keys
@@ -301,6 +300,7 @@ class StudentJobRelation(models.Model):
         return str(self.id)
 
 
+# TODO: Ask Prarthana for guidelines
 class AlumJobRelation(models.Model):
     # status variables
     # placement approved by alumni/company
@@ -309,14 +309,6 @@ class AlumJobRelation(models.Model):
     placed_approved = models.BooleanField(default=False)
     # shortlisting status
     shortlist_status = models.BooleanField(default=False)
-    # ppo process initiated by company
-    ppo_init = models.BooleanField(default=False)
-    # ppo request approved by company/alumni
-    ppo_approved = models.NullBooleanField(default=None)
-    # ppo request approved by admin and accepted by Alumni
-    ppo_accepted = models.NullBooleanField(default=None)
-    # CV to be attached with job application
-    cv_field = models.FilePathField(null=True, blank=True)
     # Foreign Keys
     alum = models.ForeignKey(Alumni, null=True, blank=True)
     job = models.ForeignKey(Job, null=True, blank=True)

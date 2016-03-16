@@ -16,10 +16,8 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.contrib.auth.models import User
-from .models import UserProfile, Student, Alumni, Company, \
-    Job, Event, StudentJobRelation
-from .forms import StudentLoginForm, EditStudProfileForm, StudCVForm, \
-    RequestEventForm, SelectCVForm, AvatarSignForm
+from .models import *
+from .forms import *
 from datetime import datetime
 from reportlab.pdfgen import canvas
 from io import BytesIO
@@ -153,13 +151,9 @@ def stud_viewjobs(request):
     :return: HTTP Response object
     """
     student_instance = get_object_or_404(Student, id=request.session['student_instance_id'])
-    job_list = Job.objects.all()
-    for job in job_list:
-        if job.cpi_shortlist:
-            if job.minimum_cpi > student_instance.cpi:
-                job_list.remove(job)
-    args = {'job_list': job_list}
-    return render(request, 'jobportal/Student/studjobs.html', args)
+    stud_prog = student_instance.prog
+    job_list = set([e.job for e in ProgrammeJobRelation.objects.filter(prog=stud_prog)])
+    return render(request, 'jobportal/Student/studjobs.html', dict(job_list=job_list, stud_prog=stud_prog))
 
 
 @login_required(login_url=STUD_LOGIN_URL)
@@ -177,9 +171,7 @@ def stud_applyjob(request, jobid):
         if form.is_valid():
             relation_instance = StudentJobRelation(
                 stud=student_instance,
-                job=job_instance,
-                placed_init=False,
-                shortlist_status=False
+                job=job_instance
             )
             relation_instance.save()
             for (question, answer) in form.extra_answers():
@@ -187,10 +179,10 @@ def stud_applyjob(request, jobid):
             relation_instance.save()
             return redirect('jobdetails', jobid=jobid)
         else:
-            args = {'form': form, 'jobid': jobid}
+            args = dict(form=form, jobid=jobid)
             return render(request, 'jobportal/Student/apply.html', args)
     else:
-        args = {'form': form, 'jobid': jobid}
+        args = dict(form=form, jobid=jobid)
         return render(request, 'jobportal/Student/apply.html', args)
 
 
@@ -217,7 +209,7 @@ def stud_jobsappliedfor(request):
     :return: HttpResponse object
     """
     student_instance = get_object_or_404(Student, id=request.session['student_instance_id'])
-    job_list = student_instance.job_set.all()
+    job_list = [e.job for e in StudentJobRelation.objects.filter(stud=student_instance)]
     args = {'job_list': job_list}
     return render(request, 'jobportal/Student/appliedfor.html', args)
 
