@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, Http404
 from datetime import datetime
+from datetime import timedelta
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
@@ -185,6 +186,8 @@ def company_add_job(request):
             job_instance.posted_by_company = True
             job_instance.posted_on = datetime.now()
             job_instance.last_updated = datetime.now()
+            job_instance.opening_date = datetime.now() + timedelta(days=30)
+            job_instance.application_deadline = datetime.now() + timedelta(days=50)
             job_instance.save()
             job_prog_rel = ProgrammeJobRelation(job=job_instance)
             job_prog_rel.save()
