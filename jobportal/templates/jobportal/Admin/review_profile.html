@@ -109,7 +109,7 @@
     <p>CPI : {{ student_instance.cpi }}</p>
 </div>
 <div class="col-md-9">
-    <p><a href="{% url 'edit_student' student_instance.id %}"> Edit Student Profile</a></p>
+    <p><a href="{% url 'edit_student' student_instance.id %}" class="btn btn-info"> Edit Student Profile</a></p>
 </div>
 {% elif edited == 'Company' %}
 <h2 class="sub-header">Company Details</h2>

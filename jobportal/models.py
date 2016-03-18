@@ -110,7 +110,7 @@ class Company(models.Model):
         verbose_name_plural = "Companies"
 
     def __unicode__(self):
-        return str(self.user.user.username)
+        return str(self.company_name)
 
 
 class Admin(models.Model):
@@ -148,7 +148,7 @@ class Alumni(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(UserProfile, blank=True, null=True)
-    avatar = VersatileImageField(upload_to=generate_profilepic_name, blank=True, default='media/avatar/sample_avatar.png')
+    avatar = VersatileImageField(upload_to=generate_profilepic_name, blank=True, default='avatar/sample_avatar.png')
     signature = VersatileImageField(upload_to=generate_signature_name, blank=True, default='media/avatar/sample_sign.png')
     roll_no = models.DecimalField(max_digits=10, decimal_places=0, unique=True, verbose_name="Roll No", default=0)
     first_name = models.CharField(max_length=20, blank=True, default="")

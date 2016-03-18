@@ -42,8 +42,7 @@ def companies_csv(request):
         ['Name', 'Description', 'Postal Address', 'Website', 'Organization Type', 'Industry Sector', 'Head HR Name',
          'Head HR Mobile'
          'Head HR Email', 'Head HR Designation', 'Head HR Fax', 'First HR Name', 'First HR Mobile', 'First HR Email',
-         'First HR Designation', 'First HR Fax', 'Second HR Name', 'Second HR Mobile', 'Second HR Email',
-         'Second HR Designation', 'Second HR Fax'])
+         'First HR Designation', 'First HR Fax'])
     for company in companies:
         writer.writerow(
             [
@@ -62,12 +61,7 @@ def companies_csv(request):
                 company.first_hr_mobile,
                 company.first_hr_email,
                 company.first_hr_designation,
-                company.first_hr_fax,
-                company.second_hr_name,
-                company.second_hr_mobile,
-                company.second_hr_email,
-                company.second_hr_designation,
-                company.second_hr_fax
+                company.first_hr_fax
             ]
         )
 

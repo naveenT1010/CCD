@@ -91,6 +91,7 @@ urlpatterns = [
     url(r'^companyaddjob/$', views_company.company_add_job, name='companyaddjob'),
     url(r'^companyeditjob/(?P<jobid>\d+)$', views_company.company_edit_job, name='companyeditjob'),
     url(r'^companydeljob/(?P<jobid>\d+)$', views_company.company_del_job, name='companydeljob'),
+    url(r'^companydropjob/(?P<jobid>\d+)$', views_company.job_drop, name='companydropjob'),
     url(r'^password_change_company/$', views_company.password_change_company, name='password_change_company'),
     url(r'^companyeditprofile/(?P<companyid>\d+)$', views_company.company_edit_profile, name='editcompanyprofile'),
     url(r'^companyeventsandstatus/$', views_company.company_eventsandstatus, name='companyeventsandstatus'),

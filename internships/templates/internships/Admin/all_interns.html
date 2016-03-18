@@ -1,4 +1,4 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_internships.html' %}
 
 {% block account_setting%}
     <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-        <h2 class="sub-header">All Jobs and Internships</h2>
+        <h2 class="sub-header">All Internships:</h2>
         <hr>
         <div class="col-md-12">
             <div class="col-md-3 input-group pull-right form-group" >
@@ -40,38 +40,25 @@
                     </tr>
                 </thead>
                 <tbody class="searchable">
-                    {% for job in  jobs %}
+                    {% for intern in intern_list %}
                         <tr>
+                            <td>{{ intern.company_owner }}</td>
+                            <td>{{ intern.designation }}</td>
+                            <td>{{ intern.num_openings }}</td>
+                            <td>{{ intern.opening_date }}</td>
+                            <td>{{ intern.closing_date }}</td>
                             <td>
-                                {% if job.posted_by_company == True %}
-                                    {{ job.company_owner }}
-                                {% elif job.posted_by_alumnus == True %}
-                                    {{ job.alum_owner }}
-                                {% endif %}
-                            </td>
-                            <td>{{ job.designation }}</td>
-                            <td>{{ job.num_openings }}</td>
-                            <td>{{ job.opening_date }}</td>
-                            <td>
-                                {% if job.application_deadline %}
-                                    {{ job.application_deadline }}
-                                {% else %}
-                                    Date Not Set
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if job.approved %}
+                                {% if intern.approved %}
                                     Approved
                                 {% else %}
                                     Approval Pending
                                 {% endif %}
                             </td>
-                            <td><a href = "{% url 'review_job' job.id|urlencode %}" class="btn btn-xs btn-primary">Details</a></td>
+                            <td><a href = "{% url 'internships:admin_intern_details' intern.id %}" class="btn btn-xs btn-primary">Details</a></td>
                         </tr>
                     {% endfor %}
 
                 </tbody>
             </table>
-
         </div>
 {% endblock %}

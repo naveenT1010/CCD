@@ -1,0 +1,62 @@
+{% extends 'base_internships.html' %}
+{% load staticfiles %}
+
+{% block head_extra %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="{% static 'smart-selects/admin/js/chainedfk.js' %}"></script>
+{% endblock %}
+
+{% block account_setting%}
+<p><a href="{% url 'companylogout' %}" title="alum_logout">Logout</a></p>
+<p><a href="#" title="">My Account</a></p>
+{% endblock%}
+
+{% block menu %}
+<li class="account-nav-head">Recruiter <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
+<li><a href="{% url 'companyhome' %}" title="Company Home">Home</a></li>
+<li><a href="{% url 'companyprofile' %}" title="Profile">Company Profile</a></li>
+<li><a href="{% url 'companyaddjob' %}" title="View Jobs">Post New Jobs</a></li>
+<li><a href="{% url 'companyviewjobs' %}" title="View Jobs">View Jobs</a></li>
+<li><a href="{% url 'companyrequestevent' %}" title="Request Event">Request Events</a></li>
+<li><a href="{% url 'companyeventsandstatus' %}" title="Events and Status">Events and Status</a></li>
+<li><a href="{% url 'password_change_company' %}" title="Change Password">Change Password</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="sub-header">Add Programmes</h2>
+<hr/>
+<div class="col-md-12">
+    <h3>JobProgFormSet</h3>
+    <form id='myForm' action="{% url 'internships:rec_add_progs' internid %}" method="post" accept-charset="utf-8">
+        <table>
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <tbody>
+            {% for form in formset %}
+            <tr>
+                <td>
+                    {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                </td>
+                {% for hidden in form.hidden_fields %}
+                <td>{{hidden}}</td>
+                {% endfor %}
+                {% for field in form.visible_fields%}
+                <td>{{field}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <input type="submit" class="btn btn-primary" value="Save">
+    </form>
+</div>
+<script src="{% static 'smart-selects/admin/js/chainedfk.js' %}"></script>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+        $(function() {
+            $('#myForm tbody tr').formset();
+        })
+
+
+</script>
+{% endblock %}

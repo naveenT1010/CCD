@@ -1,0 +1,61 @@
+{% extends 'base_internships.html' %}
+
+{% block account_setting%}
+<p><a href="{% url 'companylogout' %}" title="alum_logout">Logout</a></p>
+<p><a href="#" title="">My Account</a></p>
+{% endblock%}
+
+{% block menu %}
+<li class="account-nav-head">Recruiter <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
+<li><a href="{% url 'companyhome' %}" title="Company Home">Home</a></li>
+<li><a href="{% url 'companyprofile' %}" title="Profile">Company Profile</a></li>
+<li><a href="{% url 'companyaddjob' %}" title="View Jobs">Post New Jobs</a></li>
+<li><a href="{% url 'companyviewjobs' %}" title="View Jobs">View Jobs</a></li>
+<li><a href="{% url 'companyrequestevent' %}" title="Request Event">Request Events</a></li>
+<li><a href="{% url 'companyeventsandstatus' %}" title="Events and Status">Events and Status</a></li>
+<li><a href="{% url 'password_change_company' %}" title="Change Password">Change Password</a></li>
+{% endblock %}
+
+{% block content %}
+<h2 class="sub-header">Jobs Details:</h2>
+<hr/>
+<div class="col-md-12">
+    <p>Description: {{intern.description}}</p>
+    <p>Designation: {{intern.designation}}</p>
+    <br>
+    <h4>Programmes</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Dept</th>
+                <th>Prog</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prog in prog_list %}
+                <tr>
+                    <td>
+                        {% if prog.year%}
+                            {{prog.year}}
+                        {%endif%}
+                    </td>
+                    <td>
+                        {% if prog.dept%}
+                            {{prog.dept}}
+                        {%endif%}
+                    </td>
+                    <td>
+                        {% if prog.prog%}
+                            {{prog.prog}}
+                        {%endif%}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="{% url 'internships:rec_add_progs' intern.id %}" class="btn btn-primary">Add Programmes</a></p>
+    <p><a href="{% url 'internships:rec_intern_candiadtes' intern.id %}" class="btn btn-primary">View Candidates</a></p>
+</div>
+
+{% endblock %}

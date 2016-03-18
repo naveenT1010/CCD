@@ -1,4 +1,4 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_internships.html' %}
 {% load crispy_forms_tags %}
 
 {% block account_setting%}
@@ -18,19 +18,15 @@
 {% endblock %}
 
 {% block content %}
-    <h2 class="sub-header">Edit Posted Job</h2>
-    <hr>
-        <div class="col-md-9 well">
-            {% if job.approved == True %}
-                <p><span style="color: red">The job has been already approved. It can't be edited now.</span></p>
-                <p><span style="color: red">Contact administrator for more information.</span></p>
-            {% else %}
-
-                <form action="{% url 'companyeditjob' job.id %}" method="post" accept-charset="utf-8">
+        <h2 class="sub-header">Add internships:</h2>
+        <hr/>
+		<div class="col-md-10">
+            <div class="well">
+                <form action="{% url 'internships:rec_add_intern' %}" method="post" accept-charset="utf-8">
                     {% csrf_token %}
-                    {% crispy edit_job_form edit_job_form.helper %}
-                    <input type="submit" class="btn btn-success" value="Save">
+                    {{ form  | crispy }}
+                    <input type="submit" value="Post" class = "btn btn-success">
                 </form>
-            {% endif %}
-        </div>
+            </div>
+		</div>
 {% endblock %}

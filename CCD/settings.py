@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'smart_selects',
     'captcha',
     'mentormentee',
+    'internships',
     'jobportal',
 )
 

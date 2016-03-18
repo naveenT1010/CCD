@@ -26,7 +26,9 @@
 
 <div class="profile-box well row">
     <div class="user-img-holder thumbnail col-md-6">
-        <img src="{{ stud.avatar.thumbnail.200x200 }}">
+        {% if stud.avatar.url %}
+            <img src="{{ stud.avatar.thumbnail.200x200 }}">
+        {% endif %}
     </div>
     <p class="col-md-6">Name: {{ stud.first_name }} {{ stud.last_name }}
         <br>Course:{{ stud.prog}} {{ stud.dept.dept }} {{ stud.year }}

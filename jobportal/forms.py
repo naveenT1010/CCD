@@ -36,14 +36,15 @@ class EditStudProfileForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(EditStudProfileForm, self).__init__(*args, **kwargs)
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            self.fields['year'].required = False
-            self.fields['year'].widget.attrs['disabled'] = 'disabled'
-            self.fields['dept'].required = False
-            self.fields['dept'].widget.attrs['disabled'] = 'disabled'
-            self.fields['prog'].required = False
-            self.fields['prog'].widget.attrs['disabled'] = 'disabled'
+        # TODO: Un-comment this in production
+        # instance = getattr(self, 'instance', None)
+        # if instance and instance.pk:
+        #     self.fields['year'].required = False
+        #     self.fields['year'].widget.attrs['disabled'] = 'disabled'
+        #     self.fields['dept'].required = False
+        #     self.fields['dept'].widget.attrs['disabled'] = 'disabled'
+        #     self.fields['prog'].required = False
+        #     self.fields['prog'].widget.attrs['disabled'] = 'disabled'
         self.helper = FormHelper()
         self.helper.form_tag = False
         # TODO: See inheriting layouts
@@ -112,26 +113,27 @@ class EditStudProfileForm(ModelForm):
 
     # TODO: Updated in Django 1.9
     # TODO: https://docs.djangoproject.com/en/1.9/ref/forms/fields/#disabled
-    def clean_year(self):
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            return instance.year
-        else:
-            return self.cleaned_data['year']
-
-    def clean_dept(self):
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            return instance.dept
-        else:
-            return self.cleaned_data['dept']
-
-    def clean_prog(self):
-        instance = getattr(self, 'instance', None)
-        if instance and instance.pk:
-            return instance.prog
-        else:
-            return self.cleaned_data['prog']
+    # TODO: Un-comment this in production
+    # def clean_year(self):
+    #     instance = getattr(self, 'instance', None)
+    #     if instance and instance.pk:
+    #         return instance.year
+    #     else:
+    #         return self.cleaned_data['year']
+    #
+    # def clean_dept(self):
+    #     instance = getattr(self, 'instance', None)
+    #     if instance and instance.pk:
+    #         return instance.dept
+    #     else:
+    #         return self.cleaned_data['dept']
+    #
+    # def clean_prog(self):
+    #     instance = getattr(self, 'instance', None)
+    #     if instance and instance.pk:
+    #         return instance.prog
+    #     else:
+    #         return self.cleaned_data['prog']
 
 
 class AlumLoginForm(forms.Form):

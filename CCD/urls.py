@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'^jobportal/', include('jobportal.urls')),
     url(r'^mentormentee/', include('mentormentee.urls', namespace="mentormentee", app_name="mentormentee")),
+    url(r'^internships/', include('internships.urls', namespace="internships", app_name="internships")),
     url(r'^admin/', include(admin.site.urls)),
 ]
 

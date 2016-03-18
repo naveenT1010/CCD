@@ -62,12 +62,20 @@
                 </p>
                 <h3>Approvals</h3>
                 {% if relation_instance.placed_init %}
-                    <p>Placement-Approval-Needed</p>
-                    <p><a href="{% url 'approve_stud' relation_instance.id %}" class="btn btn-primary">Approve</a></p>
+                    {% if relation_instance.placed_approved %}
+                        <p>No approval required.</p>
+                    {% else %}
+                        <p>Placement-Approval-Needed</p>
+                        <p><a href="{% url 'approve_stud' relation_instance.id %}" class="btn btn-primary">Approve</a></p>
+                    {% endif %}
                 {% else %}
                     {% if relation_instance.shortlist_init %}
-                        <p>Shortlist-Approval-Needed</p>
-                        <p><a href="{% url 'approve_stud' relation_instance.id %}" class="btn btn-primary">Approve</a></p>
+                        {% if relation_instance.shortlist_approved %}
+                            <p>No approval required.</p>
+                        {% else %}
+                            <p>Shortlist-Approval-Needed</p>
+                            <p><a href="{% url 'approve_stud' relation_instance.id %}" class="btn btn-primary">Approve</a></p>
+                        {% endif %}
                     {% else %}
                         <p>No-Approval-Pending</p>
                     {% endif%}

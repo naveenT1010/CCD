@@ -189,6 +189,7 @@ def company_add_job(request):
             job_instance.opening_date = datetime.now() + timedelta(days=30)
             job_instance.application_deadline = datetime.now() + timedelta(days=50)
             job_instance.save()
+            print(job_instance.company_owner)
             job_prog_rel = ProgrammeJobRelation(job=job_instance)
             job_prog_rel.save()
             return redirect('companyviewjobs')
@@ -319,17 +320,18 @@ def job_unplace(request, relationid):
 
 @login_required(login_url=COMPANY_LOGIN_URL)
 def job_drop(request, jobid):
+    # TODO: Check no shortlist bug
     job_instance = get_object_or_404(Job, id=jobid)
-    stud_rels = list(StudentJobRelation.objects.get(job=job_instance))
-    error = False
+    stud_rels = list(StudentJobRelation.objects.get(job=job_instance, dropped=False))
+    approval_error = False
     for rel in stud_rels:
         if rel.shortlist_init is True and rel.shortlist_approved is not True:
-            error = True
+            approval_error = True
             break
         if rel.placed_init is True and rel.placed_approved is not True:
-            error = True
+            approval_error = True
             break
-    if not error:
+    if not approval_error:
         for rel in stud_rels:
             rel.round += 1
             if rel.shortlist_init is False:

@@ -76,25 +76,59 @@
     </div>
     <p>
         {% if relation_instance %}
-    <p><a class="btn btn-danger" href="{% url 'deapplyforjob' job_instance.id %}"
-          title=""><span>Remove Application</span></a></p>
-    <p>
-        {% if relation_instance.shortlist_status == True %}
-        You have been shortlisted.
+            {% if deadline_gone %}
+                <p>Deadline has passed.</p>
+            {% else %}
+                <h3>Status of application:</h3>
+                <p>
+                    Shortlist Init: {{ relation_instance.shortlist_init | yesno:"Yes,No" }}
+                    {% if relation_instance.shortlist_init == True %}
+                        <span class="label label-success">Shortlist-Init</span>
+                    {% elif relation_instance.shortlist_init == False%}
+                        <span class="label label-danger">Shortlist-Init</span>
+                    {% endif %}
+                </p>
+                <p>
+                    Shortlist Approved: {{ relation_instance.shortlist_approved | yesno:"Yes,No,No Action Yet" }}
+                    {% if relation_instance.shortlist_approved == True %}
+                        <span class="label label-success">Shortlist_Approved</span>
+                    {% elif relation_instance.shortlist_approved == False %}
+                        <span class="label label-danger">Shortlist_Rejected</span>
+                    {% elif relation_instance.shortlist_approved == None %}
+                        <span class="label label-default">No-Action-Yet</span>
+                    {% endif %}
+                </p>
+                <p>
+                    Placement Init: {{ relation_instance.placed_init | yesno:"Yes,No" }}
+                    {% if relation_instance.placed_init == True %}
+                        <span class="label label-success">Place_Init</span>
+                    {% elif relation_instance.placed_init == False%}
+                        <span class="label label-danger">Place_Init</span>
+                    {% endif %}
+                </p>
+                <p>
+                    Placement Approved: {{ relation_instance.placed_approved | yesno:"Yes,No,No Action Yet" }}
+                    {% if relation_instance.placed_approved == True %}
+                        <span class="label label-success">Placed-Approved</span>
+                    {% elif relation_instance.placed_approved == False %}
+                        <span class="label label-danger">Placed-Rejected</span>
+                    {% elif relation_instance.placed_approved == None %}
+                        <span class="label label-default">No-Action-Yet</span>
+                    {% endif %}
+                </p>
+                                <p><a class="btn btn-danger" href="{% url 'deapplyforjob' job_instance.id %}" title=""><span>Remove Application</span></a></p>
+            {% endif %}
+        {% else %}
+            {% if nocv %}
+            <div class="col-md-9 bs-callout bs-callout-danger">
+                <h4>No CV uploaded.</h4>
+                <p>Please upload at least one CV <a class="intext_link" href="{% url 'viewcvs' %}">here</a>.</p>
+                <p>Only then you'll be able to apply for job/internship positions.</p>
+            </div>
+            {% else %}
+            <p><a class="btn btn-success" href="{% url 'applyforjob' job_instance.id %}">Apply</a></p>
+            {% endif %}
         {% endif %}
-    </p>
-    {% else %}
-    {% if nocv %}
-    <div class="col-md-9 bs-callout bs-callout-danger">
-        <h4>No CV uploaded.</h4>
-        <p>Please upload at least one CV <a class="intext_link" href="{% url 'viewcvs' %}">here</a>.</p>
-        <p>Only then you'll be able to apply for job/internship positions.</p>
-    </div>
-    {% else %}
-    <p><a class="btn btn-success" href="{% url 'applyforjob' job_instance.id %}">Apply</a></p>
-    {% endif %}
-    {% endif %}
-    </p>
 </div>
 
 {% endblock %}

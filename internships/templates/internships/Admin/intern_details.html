@@ -1,4 +1,4 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_internships.html' %}
 {% load crispy_forms_tags %}
 
 {% block account_setting%}
@@ -27,26 +27,12 @@
     <!--TODO: Represent this data properly -->
     <!--TODO: Do something with this mess -->
     <!--https://ux.stackexchange.com/questions/1459/how-to-display-too-much-data-->
-    <p>Description :
-        <mark>{{ job_instance.description }}</mark>
-    </p>
-
-    <p>Designation :
-        <mark>{{ job_instance.designation }}</mark>
-    </p>
-
-    <p>CPI Shortlist : {{ job_instance.cpi_shortlist }}</p>
-
-    <p>Minimum CPI: {{ job_instance.minimum_cpi }}</p>
-
-    <p>Percentage X : {{ job_instance.percentage_x }}</p>
-
-    <p>Percentage XII : {{ job_instance.percentage_xii }}</p>
-
-    <p>Openings: {{ job_instance.num_openings }}</p>
-
+    <p>Description :<mark>{{ intern.description }}</mark></p>
+    <p>Designation :<mark>{{ intern.designation }}</mark></p>
+    <p>CPI Shortlist : {{ intern.cpi_shortlist }}</p>
+    <p>Openings: {{ intern.num_openings }}</p>
     <h4>Programmes List:</h4>
-    {% if progs_list.count > 0 %}
+    {% if progs_list.count > 0 and progs_list.0.year != None %}
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -69,23 +55,21 @@
         <p>No programmes listed.</p>
     {% endif %}
 
-    <h4><a href="{% url 'edit_progs' job_instance.id %}" class="btn btn-info">Add Progs</a></h4>
+    <h4><a href="{% url 'internships:admin_add_progs' intern.id %}" class="btn btn-info">Add Progs</a></h4>
 </div>
 
 <div class="col-md-9">
     <h3>Applicants Data</h3>
-
-    <h4><a href="{% url 'job_candidates' job_instance.id %}" class="btn btn-primary">Applicants' List</a></h4>
-
-    <h4><a href="{% url 'job_candidates' job_instance.id %}" class="btn btn-primary">Download Applicants' Data</a></h4>
+    <h4><a href="{% url 'internships:admin_intern_candidates' intern.id %}" class="btn btn-primary">Applicants' List</a></h4>
 </div>
 
 <div class="col-md-9">
     <h3>Edit and Delete</h3>
 
-    <h4><a href="{% url 'edit_job' job_instance.id %}" class="btn btn-warning">Edit</a></h4>
+    <h4><a href="{% url 'internships:admin_edit_intern' intern.id %}" class="btn btn-warning">Edit</a></h4>
 
-    <h4><a href="{% url 'delete_job' job_instance.id %}" class="btn btn-danger">Delete</a></h4>
+    <h4><a href="#" class="btn btn-danger">Delete</a></h4>
+
 </div>
 
 {% endblock %}
