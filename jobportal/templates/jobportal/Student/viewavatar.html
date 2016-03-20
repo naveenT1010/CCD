@@ -24,10 +24,10 @@
         <hr/>
     <div class="col-md-12">
         {% if student_instance.avatar %}
-            <p><img src="{{ student_instance.avatar.url }}"></p>
+            <p><img src="{{ student_instance.avatar.url }}" class="thumbnail"></p>
         {% endif %}
         {% if student_instance.signature %}
-            <p><img src="{{ student_instance.signature.url }}"></p>
+            <p><img src="{{ student_instance.signature.url }}" class="thumbnail"></p>
         {% endif %}
         <h4><a class="btn btn-lg btn-info" href="{% url 'avatarupload' %}" title="PDF"><span class="glyphicon glyphicon-cloud-upload"></span> Upload New Files</a></h4>
     </div>
