@@ -43,27 +43,14 @@ class JobAdmin(admin.ModelAdmin):
 admin.site.register(Job, JobAdmin)
 
 
-# Do not touch these models
-class YearAdmin(admin.ModelAdmin):
-    fields = ['current_year']
-    list_display = ['current_year']
 
 
-admin.site.register(Year, YearAdmin)
 
+admin.site.register(Year)
 
-class DepartmentAdmin(admin.ModelAdmin):
-    fields = ['dept', 'dept_code']
-    list_display = ['dept', 'dept_code']
+admin.site.register(Department)
 
-
-admin.site.register(Department, DepartmentAdmin)
-
-
-class ProgrammeAdmin(admin.ModelAdmin):
-    fields = ['name']
-    list_display = ['name']
-
+admin.site.register(Programme)
 
 class EventAdmin(admin.ModelAdmin):
     fields = ['alum_owner', 'company_owner', 'title', 'date1', 'date2', 'date3', 'final_date', 'finalised']
@@ -71,8 +58,6 @@ class EventAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Event, EventAdmin)
-
-admin.site.register(Programme, ProgrammeAdmin)
 
 admin.site.register(Company)
 
@@ -90,6 +75,5 @@ admin.site.register(Admin, AdminAdmin)
 class CompanyRegAdmin(admin.ModelAdmin):
     fields = ['company_name_reg', 'first_hr_email_reg']
     list_display = ['company_name_reg', 'first_hr_email_reg']
-
 
 admin.site.register(CompanyReg, CompanyRegAdmin)

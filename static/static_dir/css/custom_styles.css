@@ -11,7 +11,7 @@ html {
 /****************GENERAL RULES****************/
 body{
 	background: #F9F9F9 url("../img/symphony.png") repeat scroll 0% 0%;
-    font-family: "Trebuchet MS", Trebuchet, Arial, Helvetica, sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 13px;
 }
 a, a:hover, a:active{
@@ -19,8 +19,11 @@ a, a:hover, a:active{
 	color: black;
 }
 th.header{
-	background-color: lightgreen;
+	background-color: #00b6b6;
 	box-shadow: none;
+}
+table, th, td {
+   border: 1px solid black;
 }
 .intext_link, .intext_link:hover{
 	text-transform: uppercase;
@@ -31,8 +34,8 @@ th.header{
 
 /***********TYPOGRAPHY************/
 .h1, .h2, .h3, h1, h2, h3 {
-	font-family: "Lato",sans-serif;
-	color: #698114;
+	font-family: 'Roboto', sans-serif;
+	color: #00b6b6;
 	margin-top: 10px;
 }
 p{
@@ -40,7 +43,7 @@ p{
 }
 hr{
 	margin-top:0;
-	border:1px solid #698114;
+	border:1px solid #00b6b6;
 }
 span.badge{
 	position: relative;
@@ -49,17 +52,22 @@ span.badge{
 
 /**********BUTTONS************/
 .btn{
-	box-shadow: 0px 2px grey;
+	background: transparent;
+	/*box-shadow: 0px 2px grey;*/
+	color: #00b6b6;
+	border: 1px solid #00b6b6;
 }
 .btn:hover{
-	transform:translate(0px,1px);
-	box-shadow: 0px 1px grey;
+	/*transform:translate(0px,1px);*/
+	/*box-shadow: 0px 1px grey;*/
+	background-color: #00b6b6;
+	border: 1px solid #00b6b6;
 }
 .btn:focus, .btn:active{
-	transform:translate(0px,2px);
-	box-shadow: none;
-	outline: none !important;
-	border:none;
+	/*transform:translate(0px,2px);*/
+	/*box-shadow: none;*/
+	/*outline: none !important;*/
+	/*border:none;*/
 }
 
 
@@ -77,12 +85,12 @@ span.badge{
 	margin-left: 15px;
 }
 .page-header{
-	height: 100px;
-	background-color: #830000;
-	height: 300px;
+	background-size: 100% auto;
+	background-color: #b60000;
+	height: 231px;
 	margin-top: 35px;
-	background-image: -moz-linear-gradient(50% 270px, black, #830000);
-    background-image: -webkit-gradient(linear, 50% 150%, 50% 50%, from(black), to(#830000));
+	/*background-image: -webkit-gradient( linear, left top, left bottom, from(rgba(131,0,11,0.9)), to(rgba(255,255,255,0)));*/
+	/*background-image: -moz-linear-gradient(rgba(255, 0, 0, 0.7) 0%, rgba(255, 255, 255, 0) 95%);*/
 }
 .page-header #iitg_logo_img{
 	position: relative;
@@ -94,9 +102,10 @@ span.badge{
 .page-header #name{
 	display: inline;
 	position: relative;
+	font-family: 'Allura', cursive;
 	top: -20px;
-	color: white;
-	font-style: bold;
+	color: black;
+	font-size: 3.4em;
 }
 .page-header #hero_container{
 	background-image: url('../img/hero.jpg');
@@ -106,8 +115,15 @@ span.badge{
 	position: relative;	
 	top: -30px;
 	width: 85%;
-	height: 220px;
-
+	height: 150px;
+}
+.page-header #layer{
+	background-image: url('../img/az-subtle.png');
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /*******************CONTENT CONTAINER********************/
@@ -122,10 +138,9 @@ span.badge{
 .right-section{
 	background-color: white;
 	z-index: 1000;
-	top: -100px;
 	padding: 15px 13px 10px 13px;
 	min-height: 450px;
-	border-top: 5px solid green;
+	border-top: 5px solid #00b6b6;;
 	box-shadow: -4px 0px 10px;
 	-webkit-box-shadow: -4px 0px 10px;
 	-moz-box-shadow: -4px 0px 10px; 
@@ -162,9 +177,8 @@ li.account-nav-head{
 
 /*******************FOOTER********************/
 .footer{
-    background-color: #830000;
+    background-color: #b60000;
     height: 50px;
-    top: -100px;
 	box-shadow: -4px 4px 10px; 
 	-webkit-box-shadow: -4px 4px 10px; 
 	-moz-box-shadow: -4px 4px 10px; 
@@ -178,12 +192,12 @@ border{
 #welcome-middle-panel{
 	border-right: 1px solid #8A8A8A;
 }
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+/*.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
 	color: #830000;
 	text-transform: uppercase;
 	background-color: lightblue;
 	opacity: 0.66; 
-}
+}*/
 .breadcrumb a, .breadcrumb a:hover, .breadcrumb a:active{
 	color: #337ab7;
 	text-decoration: none;
