@@ -22,9 +22,6 @@ th.header{
 	background-color: #00b6b6;
 	box-shadow: none;
 }
-table, th, td {
-   border: 1px solid black;
-}
 .intext_link, .intext_link:hover{
 	text-transform: uppercase;
 	color: blue;
@@ -64,6 +61,8 @@ span.badge{
 	border: 1px solid #00b6b6;
 }
 .btn:focus, .btn:active{
+	background-color: #00b6b6;
+	border: 1px solid #00b6b6;
 	/*transform:translate(0px,2px);*/
 	/*box-shadow: none;*/
 	/*outline: none !important;*/
@@ -94,16 +93,16 @@ span.badge{
 }
 .page-header #iitg_logo_img{
 	position: relative;
-	top: -40px;
+	top: -35px;
 	display: block-inline;
 	margin-left: 6.5%;
-	width: 110px;
+	width: 90px;
 }
 .page-header #name{
 	display: inline;
 	position: relative;
 	font-family: 'Allura', cursive;
-	top: -20px;
+	top: -12px;
 	color: black;
 	font-size: 3.4em;
 }
@@ -115,7 +114,7 @@ span.badge{
 	position: relative;	
 	top: -30px;
 	width: 85%;
-	height: 150px;
+	height: 170px;
 }
 .page-header #layer{
 	background-image: url('../img/az-subtle.png');
@@ -129,7 +128,7 @@ span.badge{
 /*******************CONTENT CONTAINER********************/
 .content-container{
 	padding:0;
-	top: -30px;
+	top: -32px;
 }
 .navbar-container{
 	padding: 0;
@@ -192,12 +191,6 @@ border{
 #welcome-middle-panel{
 	border-right: 1px solid #8A8A8A;
 }
-/*.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
-	color: #830000;
-	text-transform: uppercase;
-	background-color: lightblue;
-	opacity: 0.66; 
-}*/
 .breadcrumb a, .breadcrumb a:hover, .breadcrumb a:active{
 	color: #337ab7;
 	text-decoration: none;

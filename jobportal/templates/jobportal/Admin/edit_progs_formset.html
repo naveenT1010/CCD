@@ -30,7 +30,7 @@
 <div class="col-md-12">
     <!--TODO: Style this form-->
     <form id='myForm' action="{% url 'edit_progs' job_instance.id %}" method="post" accept-charset="utf-8">
-        <table>
+        <table class="table table-striped tablesorter table-hover">
             {% csrf_token %}
             {{ formset.management_form }}
             <tbody>
