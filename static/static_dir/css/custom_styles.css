@@ -107,8 +107,9 @@ span.badge{
 	font-size: 3.4em;
 }
 .page-header #hero_container{
-	background-image: url('../img/hero.jpg');
-	background-position: -100px -350px;
+	background-image: url('../img/hero6_new.jpg');
+	background-size: 1200px 1000px;
+	background-position: 0px -420px;
 	margin-left: auto;
 	margin-right: auto;
 	position: relative;	
@@ -144,6 +145,9 @@ span.badge{
 	-webkit-box-shadow: -4px 0px 10px;
 	-moz-box-shadow: -4px 0px 10px; 
 }
+.right-section .account-login{
+	padding-top: 30px;
+}
 .navbar{
 	font-size: 1.2em;
 	padding: 0;
@@ -167,7 +171,7 @@ span.badge{
 	border-left:1px solid #ACA59D;
 }
 li.account-nav-head{
-	background-color: #830000;
+	background-color: #b60000;
 	color: #fff;
 	margin:0;
 	padding-left: 15px;

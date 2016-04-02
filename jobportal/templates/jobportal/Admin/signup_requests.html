@@ -21,14 +21,14 @@
 {% block content %}
         <h2 class="sub-header">Signup Requests</h2>
         <hr/>
-        <div class="col-md-9">
+        <div class="col-md-12">
         {% if requests %}
             {% if messages %}
                 {% for message in  messages%}
                     <div class="alert alert-success" role="alert"><p>{{ message }}</p></div>
                 {% endfor %}
             {% endif %}
-            <div class="col-md-3 input-group pull-right form-group" >
+            <div class="col-md-4 input-group pull-right form-group" >
                 <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
                 <input type="text" class="filter form-control" placeholder="What you looking for?">
             </div>

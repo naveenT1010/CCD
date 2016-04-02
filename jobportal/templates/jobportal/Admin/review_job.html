@@ -23,7 +23,7 @@
 
 <h2 class="sub-header">Job Info</h2>
 <hr>
-<div class="col-md-9">
+<div class="col-md-12">
     <!--TODO: Represent this data properly -->
     <!--TODO: Do something with this mess -->
     <!--https://ux.stackexchange.com/questions/1459/how-to-display-too-much-data-->
@@ -72,18 +72,18 @@
     <h4><a href="{% url 'edit_progs' job_instance.id %}" class="btn btn-info">Add Progs</a></h4>
 </div>
 
-<div class="col-md-9">
+<div class="col-md-12">
     <h3>Applicants Data</h3>
 
-    <h4><a href="{% url 'job_candidates' job_instance.id %}" class="btn btn-primary">Applicants' List</a></h4>
+    <h4 style="float: left; margin-right: 15px;" ><a href="{% url 'job_candidates' job_instance.id %}" class="btn btn-primary">Applicants' List</a></h4>
 
     <h4><a href="{% url 'job_candidates' job_instance.id %}" class="btn btn-primary">Download Applicants' Data</a></h4>
 </div>
 
-<div class="col-md-9">
+<div class="col-md-12">
     <h3>Edit and Delete</h3>
 
-    <h4><a href="{% url 'edit_job' job_instance.id %}" class="btn btn-warning">Edit</a></h4>
+    <h4 style="float: left; margin-right: 15px;" ><a href="{% url 'edit_job' job_instance.id %}" class="btn btn-warning">Edit</a></h4>
 
     <h4><a href="{% url 'delete_job' job_instance.id %}" class="btn btn-danger">Delete</a></h4>
 </div>
