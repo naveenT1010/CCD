@@ -175,52 +175,42 @@
 </div>
 {% elif edited == 'Request' %}
 <div class="col-md-12">
-
     <h2>Recruiter Account Request</h2>
-
-    <p><strong>Company Name: </strong>
-        <mark>{{ request.company_name_reg }}</mark>
-    </p>
-    <p><strong>Description: </strong>
-        <mark>{{ request.description_reg }}</mark>
-    </p>
-    <p><strong>Postal Address: </strong>
-        <mark>{{ request.postal_address_reg }}</mark>
-    </p>
-    <p><strong>Website: </strong>
-        <mark>{{ request.website_reg }}</mark>
-    </p>
-    <p><strong>Organization Type:</strong>
-        <mark> {{ request.organization_type_reg }}</mark>
-    </p>
-    <p><strong>Industry Sector: </strong>
-        <mark>{{ request.industry_sector_reg }}</mark>
-    </p>
+    <hr/>
+    <h3>Company Details</h3>
+    <table class="table table-striped">
+        <tr><td>Company Name:</td><td>{{ request.company_name_reg }}</td></tr>
+        <tr><td>Description:</td><td>{{ request.description_reg }}</td></tr>
+        <tr><td>Postal Address:</td><td>{{ request.postal_address_reg }}</td></tr>
+        <tr><td>Website:</td><td>{{ request.website_reg }}</td></tr>
+        <tr><td>Organization Type:</td><td>{{ request.organization_type_reg }}</td></tr>
+        <tr><td>Industry Sector:</td><td>{{ request.industry_sector_reg }}</td></td>
+    </table>
     <h3>HR Details</h3>
+    <table class="table table-striped">
+        <tr><td>Head HR Name</td><td> {{ request.head_hr_name_reg }}</td></tr>
 
-    <p>Head HR Name: {{ request.head_hr_name_reg }}</p>
+        <tr><td>Head HR Email</td><td> {{ request.head_hr_email_reg }}</td></tr>
 
-    <p>Head HR Email: {{ request.head_hr_email_reg }}</p>
+        <tr><td>Head HR Designation</td><td> {{ request.head_hr_Designation_reg }}</td></tr>
 
-    <p>Head HR Designation: {{ request.head_hr_Designation_reg }}</p>
+        <tr><td>Head HR Mobile</td><td> {{ request.head_hr_mobile_reg }}</td></tr>
 
-    <p>Head HR Mobile: {{ request.head_hr_mobile_reg }}</p>
+        <tr><td>Head HR Fax</td><td> {{ request.head_hr_fax_reg }}</td></tr>
 
-    <p>Head HR Fax: {{ request.head_hr_fax_reg }}</p>
+        <tr><td>First HR Name</td><td> {{ request.first_hr_name_reg }}</td></tr>
 
-    <p>First HR Name: {{ request.first_hr_name_reg }}</p>
+        <tr><td>First HR Designation</td><td> {{ request.first_hr_designation_reg }}</td></tr>
 
-    <p>First HR Designation: {{ request.first_hr_designation_reg }}</p>
+        <tr><td>First HR Mobile</td><td> {{ request.first_hr_mobile_reg }}</td></tr>
 
-    <p>First HR Mobile: {{ request.first_hr_mobile_reg }}</p>
+        <tr><td>First HR Email</td><td> {{ request.first_hr_email_reg }}</td></tr>
 
-    <p>First HR Email: {{ request.first_hr_email_reg }}</p>
-
-    <p>First HR Fax: {{ request.first_hr_fax_reg }}</p>
-
+        <tr><td>First HR Fax</td><td> {{ request.first_hr_fax_reg }}</td></tr>
+    </table>
     <div class="col-md-12">
-        <h4 ><a href="{% url 'add_company_by_signup_request' request.id %}" class="btn btn-info"> Add Login Credentials</a></h4>
-        <h4 ><a href="{% url 'del_signup_request' request.id %}" class="btn btn-danger"> Delete Request</a></h4>
+        <h4 style="float: left; margin-right: 15px;"><a href="{% url 'add_company_by_signup_request' request.id %}" class="btn btn-info"> Add Login Credentials</a></h4>
+        <h4><a href="{% url 'del_signup_request' request.id %}" class="btn btn-danger"> Delete Request</a></h4>
     </div>
 </div>
 {% endif %}

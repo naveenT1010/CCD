@@ -140,7 +140,7 @@ span.badge{
 	z-index: 1000;
 	padding: 15px 13px 10px 13px;
 	min-height: 450px;
-	border-top: 5px solid #00b6b6;;
+	border-top: 5px solid #00b6b6;
 	box-shadow: -4px 0px 10px;
 	-webkit-box-shadow: -4px 0px 10px;
 	-moz-box-shadow: -4px 0px 10px; 
@@ -176,7 +176,9 @@ li.account-nav-head{
 	margin:0;
 	padding-left: 15px;
 }
-
+.navbar .glyphicon{
+	color: #b60000;
+}
 
 /*******************FOOTER********************/
 .footer{
@@ -232,4 +234,9 @@ form .form-group{
 	height: 100px;
 	width: 100px;
 }
-
+.logout_img{
+	background-image: url('../img/bye.png');
+	background-repeat: no-repeat;
+	margin-top: 8%;
+	height: 100px;
+}
