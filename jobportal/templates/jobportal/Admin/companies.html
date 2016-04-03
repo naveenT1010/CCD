@@ -44,9 +44,9 @@
         {% for company in companies %}
         <tr>
             <td>{{ company.company_name }}</td>
-            <td><a href="{% url 'review_company_profile' company.id %}">Company Profile</a></td>
+            <td><a class="btn btn-info btn-xs" href="{% url 'review_company_profile' company.id %}"><span class="glyphicon glyphicon-list-alt"></span>&nbspProfile</a></td>
             <td>{{ company.approved | yesno:"Yes,No"}}</td>
-            <td><a href="{% url 'delete_company' company.id %}">Delete</a></td>
+            <td><a class="btn btn-info btn-xs" href="{% url 'delete_company' company.id %}"><span class="glyphicon glyphicon-trash"></span>&nbspDelete</a></td>
         </tr>
         {% endfor %}
         </tbody>

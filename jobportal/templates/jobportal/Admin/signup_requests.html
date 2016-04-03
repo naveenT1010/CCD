@@ -45,9 +45,9 @@
                     {% for request in requests %}
                         <tr>
                             <td>{{ request.company_name_reg }}</td>
-                            <td><a href = "{% url 'review_request_profile' request.id %}">Request Profile</a></td>
+                            <td><a class="btn btn-info btn-xs" href = "{% url 'review_request_profile' request.id %}"><span class="glyphicon glyphicon-list-alt"></span>&nbspRequest Profile</a></td>
                             <td>{{ request.first_hr_email_reg }}</td>
-                            <td><a href="{% url 'add_company_by_signup_request' request.id %}">Add Credentials</a></td>
+                            <td><a class="btn btn-info btn-xs" href="{% url 'add_company_by_signup_request' request.id %}"><span class="glyphicon glyphicon-plus"></span>&nbspAdd Credentials</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -23,7 +23,7 @@
 {% block content %}
 
 {% if edited == 'Student' %}
-<div class="col-md-9">
+<div class="col-md-12">
     <h3>Review Student Information</h3>
 
     <p>Web-mail : {{ student_instance.iitg_webmail }}</p>
@@ -108,13 +108,13 @@
 
     <p>CPI : {{ student_instance.cpi }}</p>
 </div>
-<div class="col-md-9">
+<div class="col-md-12">
     <p><a href="{% url 'edit_student' student_instance.id %}" class="btn btn-info"> Edit Student Profile</a></p>
 </div>
 {% elif edited == 'Company' %}
 <h2 class="sub-header">Company Details</h2>
 <hr>
-<div class="col-md-9">
+<div class="col-md-12">
     <div class="col-md-12">
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
@@ -129,42 +129,52 @@
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="profile">
-                <p> Company Name: {{ company_instance.company_name }}</p>
-                <p>Description: {{ company_instance.description }}</p>
-                <p>Postal Address: {{ company_instance.postal_address }}</p>
-                <p>Website: {{ company_instance.website }}</p>
-                <p>Organization Type: {{ company_instance.organization_type }}</p>
-                <p>Industry Sector: {{ company_instance.industry_sector }}</p>
+                <table class="table table-striped">
+                    <tr>
+                    <td> Company Name: </td><td> {{ company_instance.company_name }}</td>
+                    </tr><tr>
+                    <td>Description: </td><td> {{ company_instance.description }}</td>
+                    </tr><tr>
+                    <td>Postal Address: </td><td> {{ company_instance.postal_address }}</td>
+                    </tr><tr>
+                    <td>Website: </td><td> {{ company_instance.website }}</td>
+                    </tr><tr>
+                    <td>Organization Type: </td><td> {{ company_instance.organization_type }}</td>
+                    </tr><tr>
+                    <td>Industry Sector: </td><td> {{ company_instance.industry_sector }}</td>
+                    </tr>
+                </table>
             </div>
             <div role="tabpanel" class="tab-pane" id="hrdetails">
-                <p>Head HR Name: {{ company_instance.head_hr_name }}</p>
-                <p>Head HR Email: {{ company_instance.head_hr_email }}</p>
-                <p>Head HR Designation: {{ company_instance.head_hr_Designation }}</p>
-                <p>Head HR Mobile: {{ company_instance.head_hr_mobile }}</p>
-                <p>Head HR Fax: {{ company_instance.head_hr_fax }}</p>
-                <p>First HR Name: {{ company_instance.first_hr_name }}</p>
-                <p>First HR Designation: {{ company_instance.first_hr_designation }}</p>
-                <p>First HR Mobile: {{ company_instance.first_hr_mobile }}</p>
-                <p>First HR Email: {{ company_instance.first_hr_email }}</p>
-                <p>First HR Fax: {{ company_instance.first_hr_fax }}</p>
+                <table class="table table-striped">
+                    <tr><td>Head HR Name</td><td> {{ company_instance.head_hr_name }}</td></tr>
+                    <tr><td>Head HR Email</td><td> {{ company_instance.head_hr_email }}</td></tr>
+                    <tr><td>Head HR Designation</td><td> {{ company_instance.head_hr_Designation }}</td></tr>
+                    <tr><td>Head HR Mobile</td><td> {{ company_instance.head_hr_mobile }}</td></tr>
+                    <tr><td>Head HR Fax</td><td> {{ company_instance.head_hr_fax }}</td></tr>
+                    <tr><td>First HR Name</td><td> {{ company_instance.first_hr_name }}</td></tr>
+                    <tr><td>First HR Designation</td><td> {{ company_instance.first_hr_designation }}</td></tr>
+                    <tr><td>First HR Mobile</td><td> {{ company_instance.first_hr_mobile }}</td></tr>
+                    <tr><td>First HR Email</td><td> {{ company_instance.first_hr_email }}</td></tr>
+                    <tr><td>First HR Fax</td><td> {{ company_instance.first_hr_fax }}</td></tr>
+                </table>
             </div>
             <div role="tabpanel" class="tab-pane" id="status">
-
-                <dl class="dl">
-                    <dt>Approved</dt>
-                    <dd>{{ company_instance.approved | yesno | capfirst}}</dd>
-                    <dt>Sent Back</dt>
-                    <dd>{{ company_instance.sent_back | yesno |capfirst}}</dd>
-                </dl>
+                <table class="table table-striped"> 
+                    <tr><td>Approved</td>
+                    <td>{{ company_instance.approved | yesno | capfirst}}</td></tr>
+                    <tr><td>Sent Back</td>
+                    <td>{{ company_instance.sent_back | yesno |capfirst}}</td></tr>
+                </table>
             </div>
         </div>
     </div>
 </div>
-<div class="col-md-9">
+<div class="col-md-12">
     <p><a class="btn btn-info" href="{% url 'edit_company' company_instance.id %}"> Edit Company Profile</a></p>
 </div>
 {% elif edited == 'Request' %}
-<div class="col-md-9">
+<div class="col-md-12">
 
     <h2>Recruiter Account Request</h2>
 
@@ -208,7 +218,7 @@
 
     <p>First HR Fax: {{ request.first_hr_fax_reg }}</p>
 
-    <div class="col-md-9">
+    <div class="col-md-12">
         <h4 ><a href="{% url 'add_company_by_signup_request' request.id %}" class="btn btn-info"> Add Login Credentials</a></h4>
         <h4 ><a href="{% url 'del_signup_request' request.id %}" class="btn btn-danger"> Delete Request</a></h4>
     </div>
