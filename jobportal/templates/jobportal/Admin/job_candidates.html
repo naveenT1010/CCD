@@ -19,9 +19,9 @@
 {% endblock %}
 
 {% block content %}
-        <h2 class="sub-header"><strong>Applicants</strong></h2>
+        <h2 class="sub-header">Applicants</h2>
         <hr>
-        <div class="col-md-9">
+        <div class="col-md-12">
             <h4>Job: {{ job_instance.designation }}</h4>
             <h4>Owner:
                 {% if job_instance.alum_owner %}
@@ -34,7 +34,7 @@
             {% if  relation_list_stud %}
                 <!--Student Applicants-->
                 <h4 class="sub-header">Studnet Applicants</h4>
-                <table class="table table-bordered">
+                <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>Name</th>
