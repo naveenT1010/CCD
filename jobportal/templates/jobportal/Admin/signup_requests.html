@@ -21,18 +21,18 @@
 {% block content %}
         <h2 class="sub-header">Signup Requests</h2>
         <hr/>
-        <div class="col-md-9">
+        <div class="col-md-12">
         {% if requests %}
             {% if messages %}
                 {% for message in  messages%}
                     <div class="alert alert-success" role="alert"><p>{{ message }}</p></div>
                 {% endfor %}
             {% endif %}
-            <div class="col-md-3 input-group pull-right form-group" >
+            <div class="col-md-4 input-group pull-right form-group" >
                 <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
                 <input type="text" class="filter form-control" placeholder="What you looking for?">
             </div>
-            <table class="table table-bordered">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Company Name</th>
@@ -45,9 +45,9 @@
                     {% for request in requests %}
                         <tr>
                             <td>{{ request.company_name_reg }}</td>
-                            <td><a href = "{% url 'review_request_profile' request.id %}">Request Profile</a></td>
+                            <td><a class="btn btn-info btn-xs" href = "{% url 'review_request_profile' request.id %}"><span class="glyphicon glyphicon-list-alt"></span>&nbspRequest Profile</a></td>
                             <td>{{ request.first_hr_email_reg }}</td>
-                            <td><a href="{% url 'add_company_by_signup_request' request.id %}">Add Credentials</a></td>
+                            <td><a class="btn btn-info btn-xs" href="{% url 'add_company_by_signup_request' request.id %}"><span class="glyphicon glyphicon-plus"></span>&nbspAdd Credentials</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -22,13 +22,13 @@
 
 <h2>Batches/Years</h2>
 <hr>
-<div class="col-md-9">
+<div class="col-md-12">
     {% if years.count > 0 %}
     <div class="col-md-3 input-group pull-right form-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
         <input type="text" class="filter form-control" placeholder="Search">
     </div>
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <thead>
         <tr>
             <th><strong>Current Year</strong></th>
@@ -40,8 +40,8 @@
         {% for year in years %}
         <tr>
             <td>{{ year.current_year }}</td>
-            <td><a href="{% url 'edit_year' year.id %}">Edit</a></td>
-            <td><a href="{% url 'delete_year' year.id %}">Delete</a></td>
+            <td><a class="btn btn-xs" href="{% url 'edit_year' year.id %}"><span class="glyphicon glyphicon-pencil"></span>&nbspEdit</a></td>
+            <td><a class="btn btn-xs" href="{% url 'delete_year' year.id %}"><span class="glyphicon glyphicon-trash"></span>&nbspDelete</a></td>
         </tr>
         {% endfor %}
         </tbody>
@@ -51,9 +51,6 @@
     {% endif %}
 </div>
 <div class="col-md-9">
-    <h3>
-        Add year(s)
-    </h3>
     <h4><a class="btn btn-info" href="add_year">Add a new Year</a></h4>
 </div>
 
