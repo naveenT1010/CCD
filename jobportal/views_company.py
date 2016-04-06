@@ -23,7 +23,6 @@ COMPANY_LOGIN_URL = reverse_lazy('jobportal/companylogin')
 # Signup
 def signup(request):
     company_signup_form = CompanySignupForm(request.POST or None)
-    print(company_signup_form)
     if request.method == 'POST':
         if company_signup_form.is_valid():
             company_signup_form.save()
@@ -189,7 +188,6 @@ def company_add_job(request):
             job_instance.opening_date = datetime.now() + timedelta(days=30)
             job_instance.application_deadline = datetime.now() + timedelta(days=50)
             job_instance.save()
-            print(job_instance.company_owner)
             job_prog_rel = ProgrammeJobRelation(job=job_instance)
             job_prog_rel.save()
             return redirect('companyviewjobs')

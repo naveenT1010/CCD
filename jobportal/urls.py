@@ -7,6 +7,7 @@ from . import views_print
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^login$', views.login, name='login'),
     # Current Student Urls
     url(r'^stud_login/$', views.stud_login, name='stud_login'),
     # student logout

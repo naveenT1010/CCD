@@ -176,7 +176,10 @@ class JobEditForm(ModelForm):
                     'description',
                     'designation',
                     'profile_name',
-                    'num_openings'
+                    'num_openings',
+                    HTML("""
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Requirements',
@@ -184,7 +187,11 @@ class JobEditForm(ModelForm):
                     'minimum_cpi',
                     'percentage_x',
                     'percentage_xii',
-                    'other_requirements'
+                    'other_requirements',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Salary/Incentives',
@@ -201,12 +208,20 @@ class JobEditForm(ModelForm):
                     'gross_ma',
                     'take_home_during_training',
                     'take_home_after_training',
-                    'bonus'
+                    'bonus',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Bond',
                     'bond',
-                    'bond_details'
+                    'bond_details',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <input type="submit" class="btn btn-primary" value="Sign Up" >
+                    """)
                 )
             )
         )
@@ -229,7 +244,10 @@ class AdminJobEditForm(ModelForm):
                     'description',
                     'designation',
                     'profile_name',
-                    'num_openings'
+                    'num_openings',
+                    HTML("""
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Requirements',
@@ -237,7 +255,11 @@ class AdminJobEditForm(ModelForm):
                     'minimum_cpi',
                     'percentage_x',
                     'percentage_xii',
-                    'other_requirements'
+                    'other_requirements',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Salary/Incentives',
@@ -254,17 +276,29 @@ class AdminJobEditForm(ModelForm):
                     'gross_ma',
                     'take_home_during_training',
                     'take_home_after_training',
-                    'bonus'
+                    'bonus',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Bond',
                     'bond',
-                    'bond_details'
+                    'bond_details',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Date Settings',
                     'opening_date',
-                    'application_deadline'
+                    'application_deadline',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <input type="submit" class="btn btn-primary" value="Sign Up" >
+                    """)
                 )
             )
         )
@@ -300,7 +334,10 @@ class CompanySignupForm(ModelForm):
                     'website_reg',
                     'organization_type_reg',
                     'industry_sector_reg',
-                    'captcha'
+                    # 'captcha',
+                    HTML("""
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'HR Details',
@@ -313,7 +350,11 @@ class CompanySignupForm(ModelForm):
                     'first_hr_email_reg',
                     'first_hr_designation_reg',
                     'first_hr_mobile_reg',
-                    'first_hr_fax_reg'
+                    'first_hr_fax_reg',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <input type="submit" class="btn btn-primary" value="Sign Up" >
+                    """)
                 )
             )
         )

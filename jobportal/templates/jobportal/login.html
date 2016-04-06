@@ -1,0 +1,33 @@
+{% extends 'base_jobportal.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block menu %}
+<a href="/jobportal">
+    <li>Welcome</li>
+</a>
+<a href="{% url 'login' %}">
+    <li>Login</li>
+</a>
+<a href="{% url 'signup' %}">
+    <li>Recruiters Signup</li>
+</a>
+{% endblock %}
+
+{% block content%}
+<h3>Login:</h3>
+<hr>
+<div class="account-login col-md-6 col-md-offset-3">
+    <form action="{% url 'login' %}" method="post" accept-charset="utf-8">
+        {% csrf_token %}
+        <div class="well">
+            {{ form.non_field_errors }}
+            {{ form | crispy }}
+            <input type="submit" class="btn btn-primary" value="Log In">
+        </div>
+    </form>
+</div>
+{% endblock %}

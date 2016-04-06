@@ -15,7 +15,6 @@ from django.contrib import auth
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
-from django.contrib.auth.models import User
 from .models import *
 from .forms import *
 from datetime import datetime
@@ -51,6 +50,63 @@ def index(request):
     args = {}
     args.update(csrf(request))
     return render(request, 'jobportal/index.html', args)
+
+
+def login(request):
+    """
+    Handles logins.
+    :param request: HTTP Request object
+    :return: HTTP Repsonse object
+    """
+    form = StudentLoginForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            # authenticate
+            user = auth.authenticate(username=username, password=password)
+            # user exists
+            if user is not None:
+                current_user = User.objects.get(username=username)
+                user_profile = UserProfile.objects.get(user=current_user)
+                if user_profile.login_type == 'Current Student':
+                    auth.login(request, user)
+                    student_instance = Student.objects.get(user=user_profile)
+                    request.session['student_instance_id'] = student_instance.id
+                    request.session['user_type'] = 'Student'
+                    return redirect('stud_home')
+                elif user_profile.login_type == 'Company':
+                    auth.login(request, user)
+                    company_instance = Company.objects.get(user=user_profile)
+                    request.session['company_instance_id'] = company_instance.id
+                    request.session['user_type'] = 'Company'
+                    return redirect('companyhome')
+                elif user_profile.login_type == 'Alumni':
+                    auth.login(request, user)
+                    alum_instance = Alumni.objects.get(user=user_profile)
+                    request.session['alum_instance_id'] = alum_instance.id
+                    request.session['user_type'] = 'Alumni'
+                    return redirect('alum_home')
+                elif user_profile.login_type == 'Admin':
+                    auth.login(request, user)
+                    admin_instance = Admin.objects.get(user=user_profile)
+                    # set session variables
+                    request.session['admin_instance_id'] = admin_instance.id
+                    request.session['user_type'] = 'Admin'
+                    return redirect('admin_home')
+                else:
+                    # this case should never happen
+                    args = dict(form=form)
+                    return render(request, 'jobportal/login.html', args)
+            else:
+                args = dict(form=form)
+                return render(request, 'jobportal/login.html', args)
+        else:
+            args = dict(form=form)
+            return render(request, 'jobportal/login.html', args)
+    else:
+        args = dict(form=form)
+        return render(request, 'jobportal/login.html', args)
 
 
 def stud_login(request):
