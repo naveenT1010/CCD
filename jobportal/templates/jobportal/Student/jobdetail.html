@@ -1,23 +1,10 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_student.html' %}
 {% load crispy_forms_tags %}
 
 {% block account_setting%}
 <p><a href="{% url 'stud_logout' %}" title="alum_logout">Logout</a></p>
 <p><a href="#" title="">My Account</a></p>
 {% endblock%}
-
-{% block menu %}
-<li class="account-nav-head">Student <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-<li><a href="{% url 'stud_home' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-<li><a href="{% url 'studviewjobs' %}"><span class="glyphicon glyphicon-briefcase"></span> Jobs/Internship</a></li>
-<li><a href="{% url 'stud_jobsappliedfor' %}" title=""><span class="glyphicon glyphicon-ok"></span> Jobs applied for</a>
-</li>
-<li><a href="{% url 'editstudprofile' %}"><span class="glyphicon glyphicon-pencil"></span> Edit Profile</a></li>
-<li><a href="{% url 'viewcvs' %}"><span class="glyphicon glyphicon-upload"></span> Upload CV</a></li>
-<li><a href="{% url 'viewevents' %}"><span class="glyphicon glyphicon-calendar"></span> Calendar</a></li>
-<li><a href="{% url 'mentormentee:stud_proposals' %}"><span class="glyphicon glyphicon-inbox"></span> Research Proposals</a>
-</li>
-{% endblock %}
 
 {% block content %}
 <h2 class="sub-header">Company Profile and Job Details</h2>
@@ -77,8 +64,9 @@
     <p>
         {% if relation_instance %}
             {% if deadline_gone %}
-                <p>Deadline has passed.</p>
-            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    <p><strong>Deadline has passed.</strong>You can only view status of your application.</p>
+                </div>
                 <h3>Status of application:</h3>
                 <p>
                     Shortlist Init: {{ relation_instance.shortlist_init | yesno:"Yes,No" }}
@@ -116,7 +104,8 @@
                         <span class="label label-default">No-Action-Yet</span>
                     {% endif %}
                 </p>
-                                <p><a class="btn btn-danger" href="{% url 'deapplyforjob' job_instance.id %}" title=""><span>Remove Application</span></a></p>
+            {% else %}
+                <p><a class="btn btn-danger" href="{% url 'deapplyforjob' job_instance.id %}" title=""><span>Remove Application</span></a></p>
             {% endif %}
         {% else %}
             {% if nocv %}

@@ -1,22 +1,9 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_admin.html' %}
 
 {% block account_setting%}
     <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
     <p><a href="#" title="">My Account</a></p>
 {% endblock%}
-
-{% block menu %}
-<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-    <li><a href="{% url 'admin_home' %}">Home</a></li>
-    <li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
-    <li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
-    <li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-        <li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
-    <li><a href="{% url 'departments' %}">Departments</a></li>
-    <li><a href="{% url 'programmes' %}">Programmes</a></li>
-    <li><a href="{% url 'years' %}">Years</a></li>
-    <li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
-{% endblock %}
 
 {% block content %}
         <h2 class="sub-header">Status and approvals</h2>

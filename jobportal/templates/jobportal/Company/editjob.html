@@ -1,4 +1,4 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_company.html' %}
 {% load crispy_forms_tags %}
 
 {% block account_setting%}
@@ -29,7 +29,7 @@
                 <form action="{% url 'companyeditjob' job.id %}" method="post" accept-charset="utf-8">
                     {% csrf_token %}
                     {% crispy edit_job_form edit_job_form.helper %}
-                    <input type="submit" class="btn btn-success" value="Save">
+                    <!--<input type="submit" class="btn btn-success" value="Save">-->
                 </form>
             {% endif %}
         </div>
