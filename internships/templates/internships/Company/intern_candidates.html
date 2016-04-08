@@ -1,27 +1,17 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_company.html' %}
 
 {% block account_setting%}
     <p><a href="{% url 'companylogout' %}" title="alum_logout">Logout</a></p>
     <p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
-{% block menu %}
-    <li class="account-nav-head">Recruiter <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-    <li><a href="{% url 'companyhome' %}" title="Company Home">Home</a></li>
-    <li><a href="{% url 'companyprofile' %}" title="Profile">Company Profile</a></li>
-    <li><a href="{% url 'companyaddjob' %}" title="View Jobs">Post New Jobs</a></li>
-    <li><a href="{% url 'companyviewjobs' %}" title="View Jobs">View Jobs</a></li>
-    <li><a href="{% url 'companyrequestevent' %}" title="Request Event">Request Events</a></li>
-    <li><a href="{% url 'companyeventsandstatus' %}" title="Events and Status">Events and Status</a></li>
-    <li><a href="{% url 'password_change_company' %}" title="Change Password">Change Password</a></li>
-{% endblock %}
-
 {% block content %}
         <h2 class="sub-header">Interested candidates</h2>
         <hr/>
         <div class="col-md-12">
             <h4><strong>Students:</strong></h4>
-            <div class="col-md-12">
+            {% if stud_rel_list.count > 0%}
+                <div class="col-md-12">
                 <div class="pull-right span4">
                     <a class="btn btn-info" href="{% url 'internships:rec_intern_drop' intern.id %}">Complete Round</a>
                 </div>
@@ -29,6 +19,8 @@
             <br>
             <br>
             <br>
+            {% endif %}
+
             <div class="col-md-12">
             {% for stud_rel in stud_rel_list %}
                 <table class="table">
@@ -83,7 +75,7 @@
                     </tbody>
                 </table>
             {% empty %}
-                <p>No student have applied for this position.</p>
+                <h4>No student have applied for this position.</h4>
             {% endfor %}
             </div>
         </div>

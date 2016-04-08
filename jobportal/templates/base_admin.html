@@ -8,10 +8,10 @@
     <!--
     TODO: Make a drop down of approvals.
     -->
-    <li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-    <li><a href="{% url 'admin_approval' 'place' %}">Approvals: Jobs</a></li>
-    <li><a href="{% url 'admin_approval' 'place' %}">Approvals: Placements</a></li>
-    <li><a href="{% url 'admin_approval' 'place' %}">Approvals: PPO</a></li>
+    <li><a href="{% url 'jobs' %}">Jobs</a><span class="badge">{{ jobscount }}</span></li>
+    <li><a href="{% url 'internships:admin_all_interns' %}">Internships</a></li>
+    <li><a href="{% url 'admin_approval' 'job' %}">Approvals: Jobs</a></li>
+    <li><a href="{% url 'admin_approval' 'job_progress' %}">Approvals: Progress</a></li>
     <li><a href="{% url 'departments' %}">Departments</a></li>
     <li><a href="{% url 'programmes' %}">Programmes</a></li>
     <li><a href="{% url 'years' %}">Years</a></li>

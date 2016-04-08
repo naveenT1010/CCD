@@ -1,4 +1,4 @@
-{% extends 'base_internships.html' %}
+{% extends 'base_admin.html' %}
 {% load crispy_forms_tags %}
 
 {% block account_setting%}
@@ -6,31 +6,37 @@
 <p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
-{% block menu %}
-<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-<li><a href="{% url 'admin_home' %}">Home</a></li>
-<li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
-<li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
-<li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-<li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
-<li><a href="{% url 'departments' %}">Departments</a></li>
-<li><a href="{% url 'programmes' %}">Programmes</a></li>
-<li><a href="{% url 'years' %}">Years</a></li>
-<li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
-{% endblock %}
-
 {% block content %}
 
-<h2 class="sub-header">Job Info</h2>
+<h2 class="sub-header">Internship Info</h2>
 <hr>
 <div class="col-md-9">
     <!--TODO: Represent this data properly -->
     <!--TODO: Do something with this mess -->
     <!--https://ux.stackexchange.com/questions/1459/how-to-display-too-much-data-->
-    <p>Description :<mark>{{ intern.description }}</mark></p>
-    <p>Designation :<mark>{{ intern.designation }}</mark></p>
-    <p>CPI Shortlist : {{ intern.cpi_shortlist }}</p>
-    <p>Openings: {{ intern.num_openings }}</p>
+    <table class="table table-striped">
+        <tr>
+            <td>Description</td>
+            <td>{{ intern.description }}</td>
+        </tr>
+        <tr>
+            <td>Designation</td>
+            <td>{{ intern.designation }}</td>
+        </tr>
+        <tr>
+            <td>Duration</td>
+            <td>{{ intern.duration }}</td>
+        </tr>
+        <tr>
+            <td>Profile</td>
+            <td>{{ intern.profile }}</td>
+        </tr>
+        <tr>
+            <td>Stipend</td>
+            <td>{{ intern.stipend }}</td>
+        </tr>
+    </table>
+
     <h4>Programmes List:</h4>
     {% if progs_list.count > 0 and progs_list.0.year != None %}
         <table class="table table-bordered">

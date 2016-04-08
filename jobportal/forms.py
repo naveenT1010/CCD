@@ -169,7 +169,7 @@ class JobEditForm(ModelForm):
         super(JobEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        self.fields['bond_link'].help_text = 'Upload bond document to Drive/Dropbox and add link here'
+        self.fields['bond_link'].help_text = 'Upload bond document to Drive/Dropbox and add link here.'
         self.fields['bond_link'].label = 'URL of bond document'
         self.fields['cpi_shortlist'].label = 'CPI Shortlist'
         self.fields['cpi_shortlist'].help_text = 'Select this if CPI filtering is needed.'
@@ -246,7 +246,7 @@ class JobEditForm(ModelForm):
                 Tab(
                     'Bond',
                     'bond',
-                    Field('bond_link', placeholder='Leave empty is no bond is needed'),
+                    Field('bond_link', placeholder='Leave empty if no bond is needed'),
                     HTML("""
                         <a class="btn btn-primary btnPrevious" >Previous</a>
                         <input type="submit" class="btn btn-success" value="Add Job" >
@@ -321,12 +321,13 @@ class AdminJobEditForm(ModelForm):
                     """)
                 ),
                 Tab(
-                    'Date Settings',
+                    'Settings',
                     'opening_date',
                     'application_deadline',
+                    'approved',
                     HTML("""
                         <a class="btn btn-primary btnPrevious" >Previous</a>
-                        <input type="submit" class="btn btn-primary" value="Sign Up" >
+                        <input type="submit" class="btn btn-primary" value="Save" >
                     """)
                 )
             )
@@ -615,5 +616,3 @@ class AvatarSignForm(ModelForm):
     class Meta:
         model = Student
         fields = ['avatar', 'signature']
-
-

@@ -149,7 +149,7 @@ class Alumni(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(UserProfile, blank=True, null=True)
     avatar = VersatileImageField(upload_to=generate_profilepic_name, blank=True, default='avatar/sample_avatar.png')
-    signature = VersatileImageField(upload_to=generate_signature_name, blank=True, default='media/avatar/sample_sign.png')
+    signature = VersatileImageField(upload_to=generate_signature_name, blank=True, default='avatar/sample_sign.png')
     roll_no = models.DecimalField(max_digits=10, decimal_places=0, unique=True, verbose_name="Roll No", default=0)
     first_name = models.CharField(max_length=20, blank=True, default="")
     middle_name = models.CharField(max_length=20, blank=True, default="")

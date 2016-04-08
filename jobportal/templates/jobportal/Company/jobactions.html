@@ -8,15 +8,32 @@
 {% block content %}
         <h2 class="sub-header">Job Actions</h2>
         <hr>
-        <h4>Job Designation : {{ job_instance.designation }}</h4>
         <div class="col-md-9">
             <!--Student Candidate-->
             {% if stud_instance %}
-                <h4>Student Details:</h4>
-                <p>Stud name: {{ stud_instance.first_name }}</p>
-                <p>CPI : {{ stud_instance.cpi }}</p>
-                <p>Department : {{ stud_instance.dept.dept }}</p>
-                <p>Batch : {{ stud_instance.year }}</p>
+                <table class="table table-striped">
+
+                    <tr>
+                        <td>Name: </td>
+                        <td>{{ stud_instance.first_name }} {{ stud_instance.middle_name }} {{ stud_instance.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>CPI</td>
+                        <td>{{ stud_instance.cpi }}</td>
+                    </tr>
+                    <tr>
+                        <td>Department</td>
+                        <td>{{ stud_instance.dept.dept }}</td>
+                    </tr>
+                    <tr>
+                        <td>Year of Admission</td>
+                        <td>{{ stud_instance.year }}</td>
+                    </tr>
+                    <tr>
+                        <td>Programme</td>
+                        <td>{{ stud_instance.prog }}</td>
+                    </tr>
+                </table>
                 <!--TODO: Add more student details-->
                 <!--TODO: Add CV links-->
                 <h4>Application Status</h4>

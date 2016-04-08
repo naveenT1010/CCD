@@ -9,8 +9,20 @@
 <h2 class="sub-header">Jobs Details:</h2>
 <hr/>
 <div class="col-md-12">
-    <p>Description: {{job_instance.description}}</p>
-    <p>Designation: {{job_instance.designation}}</p>
+    <table class="table table-striped">
+        <tr>
+            <td>Description</td>
+            <td>{{job_instance.description}}</td>
+        </tr>
+        <tr>
+            <td>Designation</td>
+            <td>{{job_instance.designation}}</td>
+        </tr>
+        <tr>
+            <td>Approved</td>
+            <td>{{ job_instance.approved | yesno:"Approved, Rejected, Approval Pending"}}</td>
+        </tr>
+    </table>
     <br>
     <h4>Programmes</h4>
     <table class="table">
