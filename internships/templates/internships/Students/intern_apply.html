@@ -1,4 +1,4 @@
-{% extends 'base_internships.html' %}
+{% extends 'base_student.html' %}
 {% load crispy_forms_tags %}
 
 {% block account_setting%}
@@ -6,20 +6,10 @@
     <p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
-{% block menu %}
-    <li class="account-nav-head">Student <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-    <li><a href="{% url 'stud_home' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-    <li><a href="{% url 'studviewjobs' %}"><span class="glyphicon glyphicon-briefcase"></span> Jobs/Internship</a></li>
-    <li><a href="{% url 'stud_jobsappliedfor' %}" title=""><span class="glyphicon glyphicon-ok"></span> Jobs applied for</a></li>
-    <li><a href="{% url 'editstudprofile' %}"><span class="glyphicon glyphicon-pencil"></span> Edit Profile</a></li>
-    <li><a href="{% url 'viewcvs' %}"><span class="glyphicon glyphicon-upload"></span> Upload CV</a></li>
-    <li><a href="{% url 'viewevents' %}"><span class="glyphicon glyphicon-calendar"></span> Calendar</a></li>
-    <li><a href="{% url 'mentormentee:stud_proposals' %}"><span class="glyphicon glyphicon-inbox"></span> Research Proposals</a></li>
-{% endblock %}
-
 {% block content %}
         <h2 class="sub-header">Select CVs</h2>
         <hr>
+        <h4>CVs you select here will be attached with your application:</h4>
         <div class="col-md-6">
             <form method="post" action="{% url 'internships:stud_intern_apply' internid %}">
                 <div class="well">

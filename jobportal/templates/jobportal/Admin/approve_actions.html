@@ -1,66 +1,74 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_admin.html' %}
 
 {% block account_setting%}
     <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
     <p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
-{% block menu %}
-<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-    <li><a href="{% url 'admin_home' %}">Home</a></li>
-    <li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
-    <li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
-    <li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-        <li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
-    <li><a href="{% url 'departments' %}">Departments</a></li>
-    <li><a href="{% url 'programmes' %}">Programmes</a></li>
-    <li><a href="{% url 'years' %}">Years</a></li>
-    <li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
-{% endblock %}
-
 {% block content %}
         <h2 class="sub-header">Status and approvals</h2>
         <hr>
         <div class="col-md-12">
            {% if applicant_type == "stud" %}
-                <h3>Status of application:</h3>
-                <p>
-                    Shortlist Init: {{ relation_instance.shortlist_init | yesno:"Yes,No" }}
-                    {% if relation_instance.shortlist_init == True %}
-                        <span class="label label-success">Shortlist-Init</span>
-                    {% elif relation_instance.shortlist_init == False%}
-                        <span class="label label-danger">Shortlist-Init</span>
-                    {% endif %}
-                </p>
-                <p>
-                    Shortlist Approved: {{ relation_instance.shortlist_approved | yesno:"Yes,No,No Action Yet" }}
-                    {% if relation_instance.shortlist_approved == True %}
-                        <span class="label label-success">Shortlist_Approved</span>
-                    {% elif relation_instance.shortlist_approved == False %}
-                        <span class="label label-danger">Shortlist_Rejected</span>
-                    {% elif relation_instance.shortlist_approved == None %}
-                        <span class="label label-default">No-Action-Yet</span>
-                    {% endif %}
-                </p>
-                <p>
-                    Placement Init: {{ relation_instance.placed_init | yesno:"Yes,No" }}
-                    {% if relation_instance.placed_init == True %}
-                        <span class="label label-success">Place_Init</span>
-                    {% elif relation_instance.placed_init == False%}
-                        <span class="label label-danger">Place_Init</span>
-                    {% endif %}
-                </p>
-                <p>
-                    Placement Approved: {{ relation_instance.placed_approved | yesno:"Yes,No,No Action Yet" }}
-                    {% if relation_instance.placed_approved == True %}
-                        <span class="label label-success">Placed-Approved</span>
-                    {% elif relation_instance.placed_approved == False %}
-                        <span class="label label-danger">Placed-Rejected</span>
-                    {% elif relation_instance.placed_approved == None %}
-                        <span class="label label-default">No-Action-Yet</span>
-                    {% endif %}
-                </p>
-                <h3>Approvals</h3>
+                <h4>Status of application:</h4>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Action</th>
+                        <th>Status</th>
+                        <th>Tags</th>
+                    </tr>
+                    <tr>
+                        <td>Shortlist Init</td>
+                        <td>{{ relation_instance.shortlist_init | yesno:"Yes,No" }}</td>
+                        <td>
+                            {% if relation_instance.shortlist_init == True %}
+                                <span class="label label-success">Shortlist-Init</span>
+                            {% elif relation_instance.shortlist_init == False%}
+                                <span class="label label-danger">Shortlist-Init</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Shortlist Approved</td>
+                        <td>{{ relation_instance.shortlist_approved | yesno:"Yes,No,No Action Yet" }}</td>
+                        <td>
+                            {% if relation_instance.shortlist_approved == True %}
+                                <span class="label label-success">Shortlist_Approved</span>
+                            {% elif relation_instance.shortlist_approved == False %}
+                                <span class="label label-danger">Shortlist_Rejected</span>
+                            {% elif relation_instance.shortlist_approved == None %}
+                                <span class="label label-default">No-Action-Yet</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Placement Init</td>
+                        <td>{{ relation_instance.placed_init | yesno:"Yes,No" }}</td>
+                        <td>
+                            {% if relation_instance.placed_init == True %}
+                                <span class="label label-success">Place_Init</span>
+                            {% elif relation_instance.placed_init == False%}
+                                <span class="label label-danger">Place_Init</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Placement Approved</td>
+                        <td>{{ relation_instance.placed_approved | yesno:"Yes,No,No Action Yet" }}</td>
+                        <td>
+                            {% if relation_instance.placed_approved == True %}
+                                <span class="label label-success">Placed-Approved</span>
+                            {% elif relation_instance.placed_approved == False %}
+                                <span class="label label-danger">Placed-Rejected</span>
+                            {% elif relation_instance.placed_approved == None %}
+                                <span class="label label-default">No-Action-Yet</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                </table>
+                <h3>Approvals Required</h3>
+                <hr>
                 {% if relation_instance.placed_init %}
                     {% if relation_instance.placed_approved %}
                         <p>No approval required.</p>
@@ -81,10 +89,7 @@
                     {% endif%}
                 {% endif %}
             {% elif applicant_type == "alum" %}
-                <p>Shortlist Status: {{ relation_instance.shortlist_status }}</p>
-                <p>Placement Init: {{ relation_instance.placed_init }}</p>
-                <p>Placement Approved: {{ relation_instance.placed_approved }}</p>
-
+                <h4>Status of application:</h4>
                 {% if relation_instance.placed_init and not relation_instance.placed_approved %}
                     <p>This approve will approve placement request.</p>
                     <p><a href="{% url 'approve_alum' relation_instance.id %}">Approve</a></p>

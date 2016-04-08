@@ -7,6 +7,7 @@ from . import views_print
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^login$', views.login, name='login'),
     # Current Student Urls
     url(r'^stud_login/$', views.stud_login, name='stud_login'),
     # student logout
@@ -114,7 +115,15 @@ urlpatterns = [
     url(r'^companyrequestevent/$', views.company_requestevent, name='companyrequestevent'),
     # ----------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------
-    # Administrator
+    # ADMINISTRATOR
+    # ADMINISTRATOR
+    # ADMINISTRATOR
+    # ADMINISTRATOR
+    # ADMINISTRATOR
+    # ADMINISTRATOR
+    # ADMINISTRATOR
+    # ADMINISTRATOR
+    # ADMINISTRATOR
     url(r'^admin_login/', views_admin.admin_login, name="admin_login"),
     url(r'^admin_home/', views_admin.admin_home, name="admin_home"),
     url(r'^admin_logout/$', views_admin.admin_logout, name='admin_logout'),
@@ -122,7 +131,7 @@ urlpatterns = [
 
     url(r'^approve_job/(?P<jobid>\d+)$', views_admin.approve_job, name='approve_job'),
     # url(r'^sent_back_job/(?P<jobid>\d+)$', views_admin.sent_back_job, name='sent_back_job'),
-    url(r'^admin_approval/(?P<object_type>[A-Za-z]+)$', views_admin.admin_approvals, name='admin_approval'),
+    url(r'^admin_approval/(?P<object_type>[A-Za-z_]+)$', views_admin.admin_approvals, name='admin_approval'),
     # Search Users
     url(r'admin_manage/$', views_admin.admin_manage, name="admin_manage"),
     url(r'^search_students/$', views_admin.search_students, name='search_students'),

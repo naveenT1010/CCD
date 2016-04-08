@@ -208,13 +208,14 @@ def admin_add_progs(request, internid):
 def admin_intern_candidates(request, internid):
     intern_instance = get_object_or_404(IndInternship, id=internid)
     rel_stud_list = StudentInternRelation.objects.filter(intern=intern_instance)
-    args = dict(stud_list=rel_stud_list, intern=intern_instance)
+    args = dict(rel_stud_list=rel_stud_list, intern=intern_instance)
     return render(request, 'internships/Admin/intern_candidates.html', args)
 
 
 def admin_rel_approvals(request, relid):
+    # rel_instance = StudentInternRelation.objects.get(id=relid)
     rel_instance = get_object_or_404(StudentInternRelation, id=relid)
-    return render(request, 'internships/Admin/intern_approvals', dict(rel=rel_instance))
+    return render(request, 'internships/Admin/intern_approvals.html', dict(rel=rel_instance))
 
 
 def admin_approve_shortlist(request, relid):
@@ -289,3 +290,10 @@ def stud_intern_apply(request, internid):
     else:
         args = dict(form=form, internid=internid)
         return render(request, 'internships/Students/intern_apply.html', args)
+
+
+def stud_intern_applied_for(request):
+    student_instance = get_object_or_404(Student, id=request.session['student_instance_id'])
+    stud_intern_rel_list = StudentInternRelation.objects.get(stud=student_instance)
+    args = dict(stud_intern_rel_list=stud_intern_rel_list)
+    return render(request, 'internships/Students/interns_applied.html', args)

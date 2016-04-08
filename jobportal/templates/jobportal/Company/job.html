@@ -1,27 +1,28 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_company.html' %}
 
 {% block account_setting%}
 <p><a href="{% url 'companylogout' %}" title="alum_logout">Logout</a></p>
 <p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
-{% block menu %}
-<li class="account-nav-head">Recruiter <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-<li><a href="{% url 'companyhome' %}" title="Company Home">Home</a></li>
-<li><a href="{% url 'companyprofile' %}" title="Profile">Company Profile</a></li>
-<li><a href="{% url 'companyaddjob' %}" title="View Jobs">Post New Jobs</a></li>
-<li><a href="{% url 'companyviewjobs' %}" title="View Jobs">View Jobs</a></li>
-<li><a href="{% url 'companyrequestevent' %}" title="Request Event">Request Events</a></li>
-<li><a href="{% url 'companyeventsandstatus' %}" title="Events and Status">Events and Status</a></li>
-<li><a href="{% url 'password_change_company' %}" title="Change Password">Change Password</a></li>
-{% endblock %}
-
 {% block content %}
 <h2 class="sub-header">Jobs Details:</h2>
 <hr/>
 <div class="col-md-12">
-    <p>Description: {{job_instance.description}}</p>
-    <p>Designation: {{job_instance.designation}}</p>
+    <table class="table table-striped">
+        <tr>
+            <td>Description</td>
+            <td>{{job_instance.description}}</td>
+        </tr>
+        <tr>
+            <td>Designation</td>
+            <td>{{job_instance.designation}}</td>
+        </tr>
+        <tr>
+            <td>Approved</td>
+            <td>{{ job_instance.approved | yesno:"Approved, Rejected, Approval Pending"}}</td>
+        </tr>
+    </table>
     <br>
     <h4>Programmes</h4>
     <table class="table">

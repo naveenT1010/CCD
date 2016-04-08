@@ -149,7 +149,7 @@ class Alumni(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(UserProfile, blank=True, null=True)
     avatar = VersatileImageField(upload_to=generate_profilepic_name, blank=True, default='avatar/sample_avatar.png')
-    signature = VersatileImageField(upload_to=generate_signature_name, blank=True, default='media/avatar/sample_sign.png')
+    signature = VersatileImageField(upload_to=generate_signature_name, blank=True, default='avatar/sample_sign.png')
     roll_no = models.DecimalField(max_digits=10, decimal_places=0, unique=True, verbose_name="Roll No", default=0)
     first_name = models.CharField(max_length=20, blank=True, default="")
     middle_name = models.CharField(max_length=20, blank=True, default="")
@@ -226,10 +226,10 @@ class Job(models.Model):
     description = models.TextField(blank=True, verbose_name="Job Description", null=True)
     designation = models.CharField(blank=True, max_length=50, null=True, verbose_name="Job Title/Designation")
     cpi_shortlist = models.BooleanField(default=False)
-    minimum_cpi = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.00)
-    percentage_x = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True)
-    percentage_xii = models.DecimalField(max_digits=5, decimal_places=2, default=0.00, null=True)
-    num_openings = models.DecimalField(max_digits=3, decimal_places=0, null=True, default=20)
+    minimum_cpi = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=4.00)
+    percentage_x = models.DecimalField(max_digits=5, decimal_places=2, default=70.00, null=True)
+    percentage_xii = models.DecimalField(max_digits=5, decimal_places=2, default=70.00, null=True)
+    num_openings = models.DecimalField(max_digits=3, decimal_places=0, null=True, default=10)
     other_requirements = models.TextField(default="", max_length=100, null=True)
     # Salary
     currency = models.CharField(default="INR", max_length=15, null=True)
@@ -250,7 +250,8 @@ class Job(models.Model):
     # Job description
     bond = models.NullBooleanField(default=None)
     bond_details = models.TextField(blank=True, null=True, max_length=200)
-    profile_name = models.CharField(max_length=15, default="profile_name")
+    bond_link = models.URLField(null=True, blank=True)
+    profile_name = models.CharField(max_length=15, null=True)
     # Dates and Status
     posted_on = models.DateTimeField(blank=True, null=True, default=datetime.now)
     approved = models.NullBooleanField(default=None)

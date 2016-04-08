@@ -33,7 +33,7 @@ class StudentInternRelation(models.Model):
     intern_init = models.BooleanField(default=False)
     intern_approved = models.NullBooleanField(default=None)
     ppo_init = models.BooleanField(default=False)
-    ppo_approved = models.BooleanField(default=False)
+    ppo_approved = models.NullBooleanField(default=None)
     dropped = models.BooleanField(default=False)
     cv1 = models.BooleanField(default=False)
     cv2 = models.BooleanField(default=False)

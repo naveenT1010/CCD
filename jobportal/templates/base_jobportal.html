@@ -51,7 +51,7 @@
             </ul>
         </div>
         <div class="right-section col-md-9">
-            {% block content %}
+            {% block level_0 %}
             {% endblock %}
         </div>
         <div class="footer col-md-9 col-md-offset-3"></div>
@@ -83,6 +83,15 @@
         });
     });
 
+</script>
+<script>
+    $('.btnNext').click(function(){
+        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+    });
+
+    $('.btnPrevious').click(function(){
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+    });
 </script>
 {% block extra_scripts %}
 {% endblock %}

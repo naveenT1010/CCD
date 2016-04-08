@@ -169,25 +169,61 @@ class JobEditForm(ModelForm):
         super(JobEditForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        self.fields['bond_link'].help_text = 'Upload bond document to Drive/Dropbox and add link here.'
+        self.fields['bond_link'].label = 'URL of bond document'
+        self.fields['cpi_shortlist'].label = 'CPI Shortlist'
+        self.fields['cpi_shortlist'].help_text = 'Select this if CPI filtering is needed.'
         self.helper.layout = Layout(
             TabHolder(
                 Tab(
                     'Basic Information',
-                    'description',
-                    'designation',
-                    'profile_name',
-                    'num_openings'
+                    Field('description', placeholder='Brief Description of what does consists of ...'),
+                    Field('designation', placeholder='Eg. Junior Design Engineer'),
+                    Field('profile_name', placeholder='Eg. SDE, Management'),
+                    'num_openings',
+                    HTML("""
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Requirements',
-                    'cpi_shortlist',
-                    'minimum_cpi',
-                    'percentage_x',
-                    'percentage_xii',
-                    'other_requirements'
+                    # 'cpi_shortlist',
+                    # 'minimum_cpi',
+                    # 'percentage_x',
+                    # 'percentage_xii',
+                    # Field('percentage_x', css_class='col-md-6'),
+                    # Field('percentage_xii', css_class='col-md-6'),
+                    HTML('<h4>CPI</h4>'),
+                    Div(
+                        # Div('cpi_shortlist', css_class='col-md-12'),
+                        # Div('minimum_cpi', css_class='col-md-12'),
+                        Field('cpi_shortlist'),
+                        Field('minimum_cpi'),
+                        css_class='col-md-12'
+                    ),
+
+                    HTML('<h4>Percentage</h4>'),
+                    Div(
+                        # Div('percentage_x', css_class='col-md-12'),
+                        # Div('percentage_xii', css_class='col-md-12'),
+                        Field('percentage_x'),
+                        Field('percentage_xii'),
+                        css_class='col-md-12'
+                    ),
+
+                    'other_requirements',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Salary/Incentives',
+                    # MultiField(
+                    #     'B.Tech',
+                    #     'ctc_btech',
+                    #     'gross_btech',
+                    # ),
                     'currency',
                     'ctc_btech',
                     'ctc_mtech',
@@ -201,12 +237,20 @@ class JobEditForm(ModelForm):
                     'gross_ma',
                     'take_home_during_training',
                     'take_home_after_training',
-                    'bonus'
+                    'bonus',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Bond',
                     'bond',
-                    'bond_details'
+                    Field('bond_link', placeholder='Leave empty if no bond is needed'),
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <input type="submit" class="btn btn-success" value="Add Job" >
+                    """)
                 )
             )
         )
@@ -229,7 +273,10 @@ class AdminJobEditForm(ModelForm):
                     'description',
                     'designation',
                     'profile_name',
-                    'num_openings'
+                    'num_openings',
+                    HTML("""
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Requirements',
@@ -237,7 +284,11 @@ class AdminJobEditForm(ModelForm):
                     'minimum_cpi',
                     'percentage_x',
                     'percentage_xii',
-                    'other_requirements'
+                    'other_requirements',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Salary/Incentives',
@@ -254,17 +305,30 @@ class AdminJobEditForm(ModelForm):
                     'gross_ma',
                     'take_home_during_training',
                     'take_home_after_training',
-                    'bonus'
+                    'bonus',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'Bond',
                     'bond',
-                    'bond_details'
+                    'bond_link',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
-                    'Date Settings',
+                    'Settings',
                     'opening_date',
-                    'application_deadline'
+                    'application_deadline',
+                    'approved',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <input type="submit" class="btn btn-primary" value="Save" >
+                    """)
                 )
             )
         )
@@ -300,7 +364,10 @@ class CompanySignupForm(ModelForm):
                     'website_reg',
                     'organization_type_reg',
                     'industry_sector_reg',
-                    'captcha'
+                    # 'captcha',
+                    HTML("""
+                        <a class="btn btn-primary btnNext" >Next</a>
+                    """)
                 ),
                 Tab(
                     'HR Details',
@@ -313,7 +380,11 @@ class CompanySignupForm(ModelForm):
                     'first_hr_email_reg',
                     'first_hr_designation_reg',
                     'first_hr_mobile_reg',
-                    'first_hr_fax_reg'
+                    'first_hr_fax_reg',
+                    HTML("""
+                        <a class="btn btn-primary btnPrevious" >Previous</a>
+                        <input type="submit" class="btn btn-primary" value="Sign Up" >
+                    """)
                 )
             )
         )
@@ -545,5 +616,3 @@ class AvatarSignForm(ModelForm):
     class Meta:
         model = Student
         fields = ['avatar', 'signature']
-
-

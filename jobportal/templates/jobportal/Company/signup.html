@@ -1,4 +1,4 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_company.html' %}
 {% load crispy_forms_tags %}
 
 {% block menu %}
@@ -16,7 +16,7 @@
                 {% csrf_token %}
                 <div class="well">
                     {% crispy signup_form signup_form.helper %}
-                    <input type="submit" class="btn btn-primary" value="Sign Up" >
+                    <!--<input type="submit" class="btn btn-primary" value="Sign Up" >-->
                 </div>
             </form>
         </div>

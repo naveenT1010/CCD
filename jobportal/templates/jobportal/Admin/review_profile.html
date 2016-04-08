@@ -1,4 +1,4 @@
-{% extends 'base_jobportal.html' %}
+{% extends 'base_admin.html' %}
 {% load crispy_forms_tags %}
 
 
@@ -6,19 +6,6 @@
 <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
 <p><a href="#" title="">My Account</a></p>
 {% endblock%}
-
-{% block menu %}
-<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-<li><a href="{% url 'admin_home' %}">Home</a></li>
-<li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
-<li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
-<li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-<li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
-<li><a href="{% url 'departments' %}">Departments</a></li>
-<li><a href="{% url 'programmes' %}">Programmes</a></li>
-<li><a href="{% url 'years' %}">Years</a></li>
-<li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
-{% endblock %}
 
 {% block content %}
 
@@ -149,7 +136,7 @@
                 <table class="table table-striped">
                     <tr><td>Head HR Name</td><td> {{ company_instance.head_hr_name }}</td></tr>
                     <tr><td>Head HR Email</td><td> {{ company_instance.head_hr_email }}</td></tr>
-                    <tr><td>Head HR Designation</td><td> {{ company_instance.head_hr_Designation }}</td></tr>
+                    <tr><td>Head HR Designation</td><td> {{ company_instance.head_hr_designation }}</td></tr>
                     <tr><td>Head HR Mobile</td><td> {{ company_instance.head_hr_mobile }}</td></tr>
                     <tr><td>Head HR Fax</td><td> {{ company_instance.head_hr_fax }}</td></tr>
                     <tr><td>First HR Name</td><td> {{ company_instance.first_hr_name }}</td></tr>
@@ -169,6 +156,59 @@
             </div>
         </div>
     </div>
+
+        {% if job_list.count > 0 %}
+            <h4>Jobs posted from this recruiter profile:</h4>
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Designation</th>
+                        <th>Posted On</th>
+                        <th>Approved</th>
+                        <th>Details</th>
+                    </tr>
+                    {% for job in job_list %}
+                        <tr>
+                            <td>{{ job.designation }}</td>
+                            <td>{{ job.posted_on }}</td>
+                            <td>{{ job.approved | yesno:"Approved, Not Approved"}}</td>
+                            <td>
+                                <a class="btn btn-xs btn-primary" href="{% url 'review_job' job.id %}">
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+        {% endif %}
+        {% if intern_list.count > 0 %}
+            <h4>Internships posted from this recruiter profile:</h4>
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Designation</th>
+                        <th>Posted On</th>
+                        <th>Approved</th>
+                        <th>Details</th>
+                    </tr>
+                    {% for intern in intern_list %}
+                        <tr>
+                            <td>{{ intern.designation }}</td>
+                            <td>{{ intern.posted_on }}</td>
+                            <td>{{ intern.approved | yesno:"Approved, Not Approved"}}</td>
+                            <td>
+                                <a href="{% url 'internships:admin_intern_details' intern.id %}"
+                                class="btn btn-xs brn-primary">Details</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+        {% endif %}
+
 </div>
 <div class="col-md-12">
     <p><a class="btn btn-info" href="{% url 'edit_company' company_instance.id %}"> Edit Company Profile</a></p>
@@ -184,7 +224,7 @@
         <tr><td>Postal Address:</td><td>{{ request.postal_address_reg }}</td></tr>
         <tr><td>Website:</td><td>{{ request.website_reg }}</td></tr>
         <tr><td>Organization Type:</td><td>{{ request.organization_type_reg }}</td></tr>
-        <tr><td>Industry Sector:</td><td>{{ request.industry_sector_reg }}</td></td>
+        <tr><td>Industry Sector:</td><td>{{ request.industry_sector_reg }}</td></tr>
     </table>
     <h3>HR Details</h3>
     <table class="table table-striped">

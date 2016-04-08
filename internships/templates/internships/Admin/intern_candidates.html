@@ -1,31 +1,18 @@
-{% extends 'base_internships.html' %}
+{% extends 'base_admin.html' %}
 
 {% block account_setting%}
     <p><a href="{% url 'admin_logout' %}" title="alum_logout">Logout</a></p>
     <p><a href="#" title="">My Account</a></p>
 {% endblock%}
 
-{% block menu %}
-<li class="account-nav-head">Admin <span class="glyphicon glyphicon-triangle-bottom pull-right"></span></li>
-    <li><a href="{% url 'admin_home' %}">Home</a></li>
-    <li><a href="{% url 'companies' %}">Companies</a><span class="badge">{{ companiescount }}</span></li>
-    <li><a href="{% url 'signup_requests' %}">SignUp Requests</a><span class="badge">{{ requestscount }}</span></li>
-    <li><a href="{% url 'jobs' %}">Jobs/Internships</a><span class="badge">{{ jobscount }}</span></li>
-        <li><a href="{% url 'admin_approval' 'place' %}">Pending Approvals</a></li>
-    <li><a href="{% url 'departments' %}">Departments</a></li>
-    <li><a href="{% url 'programmes' %}">Programmes</a></li>
-    <li><a href="{% url 'years' %}">Years</a></li>
-    <li><a href="{% url 'admin_manage' %}">Manage Users</a></li>
-{% endblock %}
-
 {% block content %}
         <h2 class="sub-header"><strong>Applicants</strong></h2>
         <hr>
         <div class="col-md-9">
-            <h4>Job: {{ intern.designation }}</h4>
-            <h4>Owner:{{ intern.company_owner | capfirst }}</h4>
+            <h4>Internship: {{ intern.designation }}</h4>
+            <h4>Owner: <a href="#">{{ intern.company_owner | capfirst }} </a></h4>
             <br>
-            {% if  rel_stud_list %}
+            {% if rel_stud_list.count > 0 %}
                 <!--Student Applicants-->
                 <h4 class="sub-header">Studnet Applicants</h4>
                 <table class="table table-bordered">
@@ -39,7 +26,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for relation in  rel_stud_list %}
+                    {% for relation in rel_stud_list %}
                         <tr>
                             <td>{{ relation.stud.first_name }} {{ relation.stud.last_name }}</td>
                             <td>{{ relation.stud.dept.dept }}</td>
@@ -67,7 +54,8 @@
                                     <span class="label label-danger">Dropped</span>
                                 {% endif %}
                             </td>
-                            <td><a href="{% url 'approve_action' 'stud' relation.id %}" class="btn btn-xs btn-primary">Approval</a></td>
+                            <td><a href="{% url 'internships:admin_intern_rel' relation.id %}"
+                                   class="btn btn-xs btn-primary">Approval</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>

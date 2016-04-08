@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from .models import *
 from .forms import *
 
+from internships.models import IndInternship, StudentInternRelation
+
 ADMIN_LOGIN_URL = reverse_lazy('jobportal/admin_login')
 
 
@@ -46,18 +48,18 @@ def admin_login(request):
                 # TODO : Add redirect to correct login page
                 else:
                     args = dict(login_form=admin_login_form_data)
-                    return render(request, 'jobportal/Admin/admin_login.html', args)
+                    return render(request, 'jobportal/Admin/login.html', args)
             # either username-password mismatch or User doesn't exist
             else:
                 args = dict(login_form=admin_login_form_data)
-                return render(request, 'jobportal/Admin/admin_login.html', args)
+                return render(request, 'jobportal/Admin/login.html', args)
         # invalid form submission
         else:
             args = dict(login_form=admin_login_form_data)
-            return render(request, 'jobportal/Admin/admin_login.html', args)
+            return render(request, 'jobportal/Admin/login.html', args)
     else:
         args = dict(login_form=AdminLoginForm())
-        return render(request, 'jobportal/Admin/admin_login.html', args)
+        return render(request, 'jobportal/Admin/login.html', args)
 
 
 # Admin home
@@ -73,7 +75,7 @@ def admin_home(request):
             'jobscount': jobscount
             }
 
-    return render(request, 'jobportal/Admin/admin_home.html', args)
+    return render(request, 'jobportal/Admin/home.html', args)
 
 
 @login_required(login_url=ADMIN_LOGIN_URL)
@@ -320,7 +322,7 @@ def sent_back_job(request, jobid):
 # ADMIN USER MANAGEMENT
 @login_required(login_url=ADMIN_LOGIN_URL)
 def admin_manage(request):
-    return render(request, "jobportal/Admin/admin_manage.html")
+    return render(request, "jobportal/Admin/manage.html")
 
 
 # Add student manually
@@ -337,7 +339,7 @@ def add_student(request):
             student_instance.user = user_profile_instance
             student_instance.save()
             args = {'created': 'Student', 'webmail': username}
-            return render(request, 'jobportal/Admin/admin_manage.html', args)
+            return render(request, 'jobportal/Admin/manage.html', args)
         else:
             print "invalid"
             add_student_form = add_student_form_data
@@ -437,7 +439,10 @@ def add_company(request):
 @login_required(login_url=ADMIN_LOGIN_URL)
 def review_company_profile(request, companyid):
     company_instance = get_object_or_404(Company, id=companyid)
-    args = {'edited': 'Company', 'company_instance': company_instance}
+    job_list = Job.objects.all().filter(company_owner=company_instance)
+    intern_list = IndInternship.objects.all().filter(company_owner=company_instance)
+    args = dict(edited='Company', company_instance=company_instance,
+                job_list=job_list, intern_list=intern_list)
     return render(request, 'jobportal/Admin/review_profile.html', args)
 
 
@@ -549,14 +554,24 @@ def add_company_by_signup_request(request, companyregid):
         return render(request, 'jobportal/Admin/add_company.html', args)
 
 
-# Student job relation
 @login_required(login_url=ADMIN_LOGIN_URL)
-def stud_relation(request, jobid, studid):
-    stud_instance = get_object_or_404(Student, id=studid)
+def job_candidates(request, jobid):
     job_instance = get_object_or_404(Job, id=jobid)
-    relation_instance = get_object_or_404(StudentJobRelation, stud=stud_instance, job=job_instance)
-    args = {'relation_instance': relation_instance, 'stud_instance': stud_instance, 'job_instance': job_instance}
-    return render(request, "jobportal/Admin/review_job_relation.html", args)
+    relation_list_stud = StudentJobRelation.objects.all().filter(job=job_instance)
+    args = dict(relation_list_stud=relation_list_stud, job_instance=job_instance)
+    return render(request, 'jobportal/Admin/job_candidates.html', args)
+
+
+@login_required(login_url=ADMIN_LOGIN_URL)
+def approve_action(request, applicant_type, relationid):
+    if applicant_type == "stud":
+        relation_instance = get_object_or_404(StudentJobRelation, id=relationid)
+    elif applicant_type == "alum":
+        relation_instance = get_object_or_404(AlumJobRelation, id=relationid)
+    else:
+        relation_instance = None
+    args = dict(relation_instance=relation_instance, applicant_type=applicant_type)
+    return render(request, 'jobportal/Admin/approve_actions.html', args)
 
 
 @login_required(login_url=ADMIN_LOGIN_URL)
@@ -573,16 +588,6 @@ def approve_stud_relation(request, relationid):
     return redirect("approve_action", applicant_type="stud", relationid=relationid)
 
 
-# Alumni job relation
-@login_required(login_url=ADMIN_LOGIN_URL)
-def alum_relation(request, jobid, alumid):
-    alum_instance = get_object_or_404(Alumni, id=alumid)
-    job_instance = get_object_or_404(Job, id=jobid)
-    relation_instance = get_object_or_404(AlumJobRelation, alum=alum_instance, job=job_instance)
-    args = {'relation_instance': relation_instance, 'alum_instance': alum_instance, 'job_instance': job_instance}
-    return render(request, "jobportal/Admin/review_job_relation.html", args)
-
-
 @login_required(login_url=ADMIN_LOGIN_URL)
 def approve_alum_relation(request, relationid):
     relation_instance = get_object_or_404(AlumJobRelation, id=relationid)
@@ -593,40 +598,35 @@ def approve_alum_relation(request, relationid):
     return redirect("approve_action", applicant_type="alum", relationid=relationid)
 
 
-@login_required(login_url=ADMIN_LOGIN_URL)
-def job_candidates(request, jobid):
-    job_instance = get_object_or_404(Job, id=jobid)
-    relation_list_stud = StudentJobRelation.objects.all().filter(job=job_instance)
-    args = dict(relation_list_stud=relation_list_stud, job_instance=job_instance)
-    return render(request, 'jobportal/Admin/job_candidates.html', args)
-
-
-@login_required(login_url=ADMIN_LOGIN_URL)
-def approve_action(request, applicant_type, relationid):
-    if applicant_type == "stud":
-        relation_instance = get_object_or_404(StudentJobRelation, id=relationid)
-    if applicant_type == "alum":
-        relation_instance = get_object_or_404(AlumJobRelation, id=relationid)
-    args = dict(relation_instance=relation_instance, applicant_type=applicant_type)
-    return render(request, 'jobportal/Admin/approve_actions.html', args)
-
-
 # New approval views
 @login_required(login_url=ADMIN_LOGIN_URL)
 def admin_approvals(request, object_type):
     if str(object_type) == "job":
         job_list = Job.objects.all().filter(approved__isnull=True)
-        return render(request, 'jobportal/Admin/unapprv_job.html', {'job_list': job_list})
-    elif str(object_type) == "ppo":
-        ppo_list = StudentJobRelation.objects.all().filter(ppo_init=True, ppo_approved__isnull=True)
-        return render(request, 'jobportal/Admin/unapprv_ppo.html', {'ppo_list': ppo_list})
-    elif str(object_type) == "place":
-        student_list = StudentJobRelation.objects.all().filter(placed_init=True).filter(placed_approved__isnull=True)
-        alum_list = AlumJobRelation.objects.all().filter(placed_init=True).filter(placed_approved__isnull=True)
-        print len(student_list)
-        print len(alum_list)
-        args = {'student_list': student_list, 'alum_list': alum_list}
-        return render(request, 'jobportal/Admin/unapprv_place.html', args)
+        intern_list = IndInternship.objects.all().filter(approved__isnull=True)
+        args = dict(intern_list=intern_list, job_list=job_list)
+        return render(request, 'jobportal/Admin/unapprv_job.html', args)
+    elif str(object_type) == "job_progress":
+        job_shortlist = StudentJobRelation.objects.all().filter(
+            shortlist_init=True, shortlist_approved__isnull=True
+        )
+        job_place_list = StudentJobRelation.objects.all().filter(
+            placed_init=True, placed_approved__isnull=True
+        )
+        args = dict(job_shortlist=job_shortlist, job_place_list=job_place_list)
+        return render(request, 'jobportal/Admin/unapprv_progress.html', args)
+    elif str(object_type) == "intern_progress":
+        intern_shortlist = StudentInternRelation.objects.all().filter(
+            shortlist_init=True, shortlist_approved__isnull=True
+        )
+        intern_hire = StudentInternRelation.objects.all().filter(
+            intern_init=True, intern_approved__isnull=True
+        )
+        intern_ppo = StudentInternRelation.objects.all().filter(
+            ppo_init=True, ppo_approved__isnull=True
+        )
+        args = dict(intern_hire=intern_hire, intern_ppo=intern_ppo, intern_shortlist=intern_shortlist)
+        return render(request, 'jobportal/Admin/unapprv_progress.html', args)
     else:
         return redirect("admin_home")
 

@@ -2,11 +2,11 @@
 
 {% block menu %}
     <a href="/jobportal"><li>Welcome</li></a>
-    <a href="{% url 'stud_login' %}"><li>Login</li></a>
+    <a href="{% url 'login' %}"><li>Login</li></a>
     <a href="{% url 'signup' %}"><li>Recruiters Signup</li></a>
 {% endblock %}
 
-{% block content %}
+{% block level_0 %}
     <h3>Successfully logged out.</h3>
     <hr>
     <div class="logout_img col-md-offset-5"></div>
